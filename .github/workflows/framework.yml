@@ -15,11 +15,11 @@ jobs:
     outputs:
       framework: ${{ steps.filter.outputs.framework }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.2.0
 
     - name: Filter changed paths
       id: filter
-      uses: dorny/paths-filter@v3
+      uses: dorny/paths-filter@v4
       with:
         filters: |
           framework:
@@ -37,7 +37,7 @@ jobs:
     name: Python ${{ matrix.python }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.2.0
       with:
         fetch-depth: 0
 
@@ -63,6 +63,11 @@ jobs:
       run: |
         cd framework
         python -m poetry install --all-extras
+        
+    - name: Install taplo for TOML formatting checks
+      if: ${{ needs.changes.outputs.framework == 'true' }}
+      run: |
+        cargo install taplo-cli --version 0.9.3
 
     - name: Check if protos need recompilation
       if: ${{ needs.changes.outputs.framework == 'true' }}
