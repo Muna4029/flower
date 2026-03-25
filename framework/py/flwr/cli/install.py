@@ -39,7 +39,10 @@ def install(
     ] = None,
     flwr_dir: Annotated[
         Optional[Path],
-        typer.Option("--flwr-dir", help="The desired install path."),
+        typer.Option(
+            "--flwr-dir",
+            help="The desired install path.",
+        ),
     ] = None,
 ) -> None:
     """Install a Flower App Bundle.

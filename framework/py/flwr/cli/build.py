@@ -56,7 +56,10 @@ def get_fab_filename(conf: dict[str, Any], fab_hash: str) -> str:
 def build(
     app: Annotated[
         Optional[Path],
-        typer.Option("--app", help="Path of the Flower App to bundle into a FAB"),
+        typer.Option(
+            "--app",
+            help="Path of the Flower App to bundle into a FAB",
+        ),
     ] = None,
 ) -> tuple[str, str]:
     """Build a Flower App into a Flower App Bundle (FAB).
