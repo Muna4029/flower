@@ -156,7 +156,7 @@ def log(
     stream: Annotated[
         bool,
         typer.Option(
-            "--stream/--show",
+            "--stream/--no-stream",
             help="Flag to stream or print logs from the Flower run",
         ),
     ] = True,
