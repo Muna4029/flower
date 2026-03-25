@@ -14,6 +14,8 @@
 # ==============================================================================
 """Flower command line interface."""
 
+from typing import Optional
+
 import typer
 from typer.main import get_command
 
@@ -47,24 +49,28 @@ app.command()(ls)
 app.command()(stop)
 app.command()(login)
 
-typer_click_object = get_command(app)
+def version_callback(value: bool) -> None:
+    """Print version and exit when requested."""
+    if value:
+        typer.secho(f"Flower version: {package_version}", fg="blue")
+        raise typer.Exit()
 
 
 @app.callback(invoke_without_command=True)
-def version_callback(
-    ver: bool = typer.Option(
-        False,
+def main(
+    version: Optional[bool] = typer.Option(
+        None,
         "-V",
         "--version",
-        is_flag=True,
+        callback=version_callback,
         is_eager=True,
         help="Show the version and exit.",
     ),
 ) -> None:
-    """Print version."""
-    if ver:
-        typer.secho(f"Flower version: {package_version}", fg="blue")
-        raise typer.Exit()
+    """Flower root command."""
+
+
+typer_click_object = get_command(app)
 
 
 if __name__ == "__main__":
