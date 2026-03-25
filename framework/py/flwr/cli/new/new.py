@@ -99,11 +99,11 @@ def new(
     ] = None,
     framework: Annotated[
         Optional[MlFramework],
-        typer.Option(case_sensitive=False, help="The ML framework to use"),
+        typer.Option("--framework", case_sensitive=False, help="The ML framework to use"),
     ] = None,
     username: Annotated[
         Optional[str],
-        typer.Option(case_sensitive=False, help="The Flower username of the author"),
+        typer.Option("--username", case_sensitive=False, help="The Flower username of the author"),
     ] = None,
 ) -> None:
     """Create new Flower App."""
