@@ -156,11 +156,11 @@ def log(
     stream: Annotated[
         bool,
         typer.Option(
-            "--stream/--no-stream",
-            help="Flag to stream or print logs from the Flower run",
+            "--stream",
+            help="Stream logs from the Flower run",
             is_flag=True,
         ),
-    ] = True,
+    ] = False,
 ) -> None:
     """Get logs from a Flower project run."""
     typer.secho("Loading project configuration... ", fg=typer.colors.BLUE)
