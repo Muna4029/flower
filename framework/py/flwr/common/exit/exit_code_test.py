@@ -21,7 +21,7 @@ from .exit_code import EXIT_CODE_HELP, ExitCode
 
 
 def _extract_rst_title(text: str) -> str:
-    """Extract the first RST section title from text.
+    r"""Extract the first RST section title from text.
 
     Supports both styles:
     - [0] SUCCESS\n###########
