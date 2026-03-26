@@ -20,6 +20,24 @@ from pathlib import Path
 from .exit_code import EXIT_CODE_HELP, ExitCode
 
 
+def _extract_rst_title(text: str) -> str:
+    """Extract the first RST section title from text.
+
+    Supports both styles:
+    - [0] SUCCESS\n###########
+    - ###########\n [0] SUCCESS\n###########
+    """
+    lines = [line.rstrip("\n") for line in text.splitlines()]
+    non_empty = [line for line in lines if line.strip()]
+    if not non_empty:
+        return ""
+
+    first = non_empty[0].strip()
+    if len(non_empty) >= 2 and len(set(first)) == 1 and first[0] in "#=*-~`^+":
+        return non_empty[1].strip()
+    return first
+
+
 def test_exit_code_help_exist() -> None:
     """Test if all exit codes have help message."""
     for name, code in ExitCode.__dict__.items():
@@ -46,7 +64,7 @@ def test_exit_code_help_url_exist() -> None:
 
         # Retrieve the title from the help URL
         f = files[code]
-        title = f.read_text().split("\n")[0]
+        title = _extract_rst_title(f.read_text())
 
         # Assert the title is correct
         assert (

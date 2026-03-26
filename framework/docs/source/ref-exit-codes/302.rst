@@ -1,8 +1,8 @@
 [302] SUPERNODE_NODE_AUTH_KEYS_INVALID
 
-*************
+#############
  Description
-*************
+#############
 
 The provided key files are invalid. Authentication requires a valid elliptic curve
 private and public key pair. This error occurs when either:
@@ -12,9 +12,9 @@ private and public key pair. This error occurs when either:
 - The **public key** file specified in ``--auth-supernode-public-key`` is invalid or
   unreadable.
 
-****************
+################
  How to Resolve
-****************
+################
 
 1. Ensure that the file paths provided for the private and public key options are
    correct.

@@ -1,15 +1,15 @@
 [300] SUPERNODE_REST_ADDRESS_INVALID
 
-*************
+#############
  Description
-*************
+#############
 
 The provided SuperLink address for the REST API is invalid. The address must start with
 ``http://`` or ``https://`` to be recognized correctly.
 
-****************
+################
  How to Resolve
-****************
+################
 
 When using the REST API, ensure that the server address starts with either ``https://``
 or ``http://``. For example:
