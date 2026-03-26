@@ -38,32 +38,33 @@ app = typer.Typer(
     context_settings={"help_option_names": ["-h", "--help"]},
 )
 
-
-@app.callback(invoke_without_command=True, no_args_is_help=True)
-def main(
-    version: bool = typer.Option(
-        False,
-        "-V",
-        "--version",
-        help="Show the version and exit.",
-    ),
-) -> None:
-    """Flower command line interface."""
-    if version:
-        typer.echo(f"Flower version: {package_version}")
-        raise typer.Exit()
-
-
 app.command()(new)
 app.command()(run)
 app.command()(build)
 app.command()(install)
 app.command()(log)
 app.command()(ls)
+app.command(hidden=True)(ls)
 app.command()(stop)
 app.command()(login)
 
 typer_click_object = get_command(app)
+
+
+@app.callback(invoke_without_command=True)
+def version_callback(
+    ver: bool = typer.Option(
+        None,
+        "-V",
+        "--version",
+        is_eager=True,
+        help="Show the version and exit.",
+    ),
+) -> None:
+    """Print version."""
+    if ver:
+        typer.secho(f"Flower version: {package_version}", fg="blue")
+        raise typer.Exit()
 
 
 if __name__ == "__main__":
