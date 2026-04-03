@@ -49,7 +49,7 @@ def test_exit_code_help_url_exist() -> None:
         lines = f.read_text().split("\n")
         # Support both underline-only (title on line 0) and
         # overline+underline headings (title on line 1)
-        title = lines[1] if lines[0].startswith("#") else lines[0]
+        title = (lines[1] if lines[0].startswith("#") else lines[0]).strip()
 
         # Assert the title is correct
         assert (
