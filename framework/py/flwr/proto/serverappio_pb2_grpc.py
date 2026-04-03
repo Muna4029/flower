@@ -78,67 +78,78 @@ class ServerAppIoServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def CreateRun(self, request, context):
-        """Request run_id."""
+        """Request run_id
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def GetNodes(self, request, context):
-        """Return a set of nodes."""
+        """Return a set of nodes
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def PushMessages(self, request, context):
-        """Create one or more messages."""
+        """Create one or more messages
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def PullMessages(self, request, context):
-        """Get message results."""
+        """Get message results
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def GetRun(self, request, context):
-        """Get run details."""
+        """Get run details
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def GetFab(self, request, context):
-        """Get FAB."""
+        """Get FAB
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def PullServerAppInputs(self, request, context):
-        """Pull ServerApp inputs."""
+        """Pull ServerApp inputs
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def PushServerAppOutputs(self, request, context):
-        """Push ServerApp outputs."""
+        """Push ServerApp outputs
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def UpdateRunStatus(self, request, context):
-        """Update the status of a given run."""
+        """Update the status of a given run
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def GetRunStatus(self, request, context):
-        """Get the status of a given run."""
+        """Get the status of a given run
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def PushLogs(self, request, context):
-        """Push ServerApp logs."""
+        """Push ServerApp logs
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')

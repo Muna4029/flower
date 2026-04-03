@@ -52,37 +52,43 @@ class SimulationIoServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def PullSimulationInputs(self, request, context):
-        """Pull Simulation inputs."""
+        """Pull Simulation inputs
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def PushSimulationOutputs(self, request, context):
-        """Push Simulation outputs."""
+        """Push Simulation outputs
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def UpdateRunStatus(self, request, context):
-        """Update the status of a given run."""
+        """Update the status of a given run
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def PushLogs(self, request, context):
-        """Push ServerApp logs."""
+        """Push ServerApp logs
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def GetFederationOptions(self, request, context):
-        """Get Federation Options."""
+        """Get Federation Options
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def GetRunStatus(self, request, context):
-        """Get Run Status."""
+        """Get Run Status
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')

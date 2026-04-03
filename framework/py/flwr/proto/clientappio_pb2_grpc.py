@@ -35,19 +35,22 @@ class ClientAppIoServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def GetToken(self, request, context):
-        """Get token."""
+        """Get token
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def PullClientAppInputs(self, request, context):
-        """Get Message, Context, and Run."""
+        """Get Message, Context, and Run
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def PushClientAppOutputs(self, request, context):
-        """Send updated Message and Context."""
+        """Send updated Message and Context
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
