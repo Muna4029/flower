@@ -14,7 +14,6 @@
 # ==============================================================================
 """RecordDict tests."""
 
-
 import pickle
 from collections import OrderedDict
 from copy import deepcopy
@@ -276,7 +275,7 @@ def test_set_metrics_to_metricrecord_with_and_without_keeping_input(
 
     # Add metric
     m_record = MetricRecord(my_metrics, keep_input=keep_input)
-    
+
     # Check metrics are actually added
     # Check that input dict has been emptied when enabled such behaviour
     if keep_input:
