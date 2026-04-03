@@ -76,7 +76,7 @@ class FleetServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def PullMessages(self, request, context):
-        """Retrieve one or more messages, if possible
+        """Retrieve one or more messages, if possible.
 
         HTTP API path: /api/v1/fleet/pull-messages
         """
@@ -85,7 +85,7 @@ class FleetServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def PushMessages(self, request, context):
-        """Complete one or more messages, if possible
+        """Complete one or more messages, if possible.
 
         HTTP API path: /api/v1/fleet/push-messages
         """
@@ -100,8 +100,7 @@ class FleetServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def GetFab(self, request, context):
-        """Get FAB
-        """
+        """Get FAB."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')

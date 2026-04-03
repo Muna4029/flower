@@ -50,43 +50,37 @@ class ExecServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def StartRun(self, request, context):
-        """Start run upon request
-        """
+        """Start run upon request."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def StopRun(self, request, context):
-        """Stop run upon request
-        """
+        """Stop run upon request."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def StreamLogs(self, request, context):
-        """Start log stream upon request
-        """
+        """Start log stream upon request."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def ListRuns(self, request, context):
-        """flwr ls command
-        """
+        """Flwr ls command."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def GetLoginDetails(self, request, context):
-        """Get login details upon request
-        """
+        """Get login details upon request."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def GetAuthTokens(self, request, context):
-        """Get auth tokens upon request
-        """
+        """Get auth tokens upon request."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
