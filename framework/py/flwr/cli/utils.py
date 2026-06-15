@@ -320,19 +320,17 @@ def flwr_cli_grpc_exc_handler() -> Iterator[None]:
                 fg=typer.colors.RED,
                 bold=True,
             )
-            # Safely retrieve error details. Some RpcError implementations
-            # may not expose a `details` attribute in static analysis,
-            # so use getattr and handle callable/string cases to satisfy
-            # linters and avoid AttributeError at runtime.
-            details_attr = getattr(e, "details", None)
+            # Try calling `details()` first; if it isn't callable or
+            # not present, fall back to a string attribute or `str(e)`.
             details = None
-            if callable(details_attr):
-                try:
-                    details = details_attr()
-                except Exception:
-                    details = str(e)
-            elif isinstance(details_attr, str):
-                details = details_attr
+            try:
+                details = e.details()
+            except (AttributeError, TypeError):
+                details_attr = getattr(e, "details", None)
+                if isinstance(details_attr, str):
+                    details = details_attr
+            if not details:
+                details = str(e)
             if details:
                 typer.secho(details, fg=typer.colors.RED, bold=True)
             raise typer.Exit(code=1) from None
