@@ -15,10 +15,10 @@
 """Utility functions for performing operations on Numpy NDArrays."""
 
 
-from typing import Any, Union
+from typing import Any, Type, Union
 
 import numpy as np
-from numpy.typing import DTypeLike, NDArray
+from numpy.typing import NDArray
 
 
 def factor_combine(factor: int, parameters: list[NDArray[Any]]) -> list[NDArray[Any]]:
@@ -39,7 +39,7 @@ def get_parameters_shape(parameters: list[NDArray[Any]]) -> list[tuple[int, ...]
 
 
 def get_zero_parameters(
-    dimensions_list: list[tuple[int, ...]], dtype: DTypeLike = np.int64
+    dimensions_list: list[tuple[int, ...]], dtype: Type[np.generic] = np.int64
 ) -> list[NDArray[Any]]:
     """Generate zero parameters based on the dimensions list."""
     return [np.zeros(dimensions, dtype=dtype) for dimensions in dimensions_list]
