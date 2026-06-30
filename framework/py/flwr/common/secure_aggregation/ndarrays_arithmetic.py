@@ -18,6 +18,7 @@
 from typing import Union
 
 import numpy as np
+
 from flwr.common.typing import NDArray
 
 
