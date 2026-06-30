@@ -13,6 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 """Aggregation functions for strategy implementations."""
+
 # mypy: disallow_untyped_calls=False
 
 from functools import partial, reduce
@@ -49,8 +50,7 @@ def aggregate_inplace(results: list[tuple[ClientProxy, FitRes]]) -> NDArrays:
 
     # Compute scaling factors for each result
     scaling_factors: list[np.float64] = [
-        np.float64(fit_res.num_examples / num_examples_total)
-        for _, fit_res in results
+        np.float64(fit_res.num_examples / num_examples_total) for _, fit_res in results
     ]
 
     def _try_inplace(
@@ -243,9 +243,7 @@ def aggregate_qffl(
         for j in range(1, len(deltas)):
             tmp += scaled_deltas[j][i]
         updates.append(cast(NDArray, tmp))
-    new_parameters = [
-        cast(NDArray, (u - v) * 1.0) for u, v in zip(parameters, updates)
-    ]
+    new_parameters = [cast(NDArray, (u - v) * 1.0) for u, v in zip(parameters, updates)]
     return new_parameters
 
 
