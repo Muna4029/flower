@@ -125,9 +125,7 @@ def aggregate_krum(
 
     if to_keep > 0:
         # Choose to_keep clients and return their average (MultiKrum)
-        best_indices = sorted(range(len(scores)), key=lambda idx: scores[idx])[
-            :to_keep
-        ]
+        best_indices = sorted(range(len(scores)), key=lambda idx: scores[idx])[:to_keep]
         best_results = [results[i] for i in best_indices]
         return aggregate(best_results)
 
