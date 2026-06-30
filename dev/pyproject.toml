@@ -35,7 +35,7 @@ sphinx-argparse = "==0.4.0"
 mdformat = "==0.7.18"
 mdformat-gfm = "==0.3.6"
 mdformat-frontmatter = "==2.0.1"
-mdformat-beautysh = "==0.1.1"
+mdformat-beautysh = ">=0.1.1,<=1.0.0"
 GitPython = "==3.1.32"
 sphinx-substitution-extensions = "2022.02.16"
 sphinxext-opengraph = "==0.9.1"
@@ -43,10 +43,17 @@ docstrfmt = { git = "https://github.com/charlesbvll/docstrfmt.git", branch = "pa
 
 [tool.docstrfmt]
 extend_exclude = [
-    "../intelligence/docs/source/ts-ref-api/*",
-    "../intelligence/docs/source/swift-ref-api/*",
-    "../intelligence/docs/source/_templates/autosummary/*",
-    "../intelligence/docs/source/conf.py",
+<<<<<<< ours
+    "intelligence/docs/source/ts-ref-api/*",
+    "intelligence/docs/source/swift-ref-api/*",
+    "intelligence/docs/source/_templates/autosummary/*",
+    "intelligence/docs/source/conf.py",
+=======
+    "ts-ref-api/*",
+    "swift-ref-api/*",
+    "_templates/autosummary/*",
+    "conf.py",
+>>>>>>> theirs
 ]
 
 [tool.isort]
