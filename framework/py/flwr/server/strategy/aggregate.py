@@ -48,14 +48,15 @@ def aggregate_inplace(results: list[tuple[ClientProxy, FitRes]]) -> NDArrays:
     num_examples_total = sum(fit_res.num_examples for (_, fit_res) in results)
 
     # Compute scaling factors for each result
-    scaling_factors = [
-        fit_res.num_examples / num_examples_total for _, fit_res in results
+    scaling_factors: list[np.float64] = [
+        np.float64(fit_res.num_examples / num_examples_total)
+        for _, fit_res in results
     ]
 
     def _try_inplace(
-        x: NDArray, y: Union[NDArray, np.float64], np_binary_op: np.ufunc
+        x: NDArray, y: Union[NDArray, float, np.float64], np_binary_op: np.ufunc
     ) -> NDArray:
-        y_array = np.asarray(y)
+        y_array: np.ndarray[Any, Any] = np.asarray(y)
         if np.can_cast(y_array.dtype, x.dtype, casting="same_kind"):
             return cast(NDArray, np_binary_op(x, y_array, out=x))
         return cast(
@@ -230,14 +231,21 @@ def aggregate_qffl(
     demominator: float = float(np.sum(np.asarray(hs_fll)))
     scaled_deltas: list[NDArrays] = []
     for client_delta in deltas:
-        scaled_deltas.append([layer * 1.0 / demominator for layer in client_delta])
+        scaled_deltas.append(
+            [
+                cast(NDArray, np.asarray(layer) * 1.0 / demominator)
+                for layer in client_delta
+            ]
+        )
     updates: NDArrays = []
     for i in range(len(deltas[0])):
-        tmp = scaled_deltas[0][i]
+        tmp = cast(NDArray, scaled_deltas[0][i])
         for j in range(1, len(deltas)):
             tmp += scaled_deltas[j][i]
-        updates.append(tmp)
-    new_parameters = [(u - v) * 1.0 for u, v in zip(parameters, updates)]
+        updates.append(cast(NDArray, tmp))
+    new_parameters = [
+        cast(NDArray, (u - v) * 1.0) for u, v in zip(parameters, updates)
+    ]
     return new_parameters
 
 
