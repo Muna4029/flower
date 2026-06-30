@@ -1,4 +1,6 @@
 :og:description: Pin Flower Docker images to specific versions using image digests, ensuring consistent deployments while receiving essential security updates.
+
+
 .. meta::
     :description: Pin Flower Docker images to specific versions using image digests, ensuring consistent deployments while receiving essential security updates.
 

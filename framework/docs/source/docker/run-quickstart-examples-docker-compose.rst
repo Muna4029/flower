@@ -1,4 +1,6 @@
 :og:description: Beginner’s guide to running Flower quickstart examples with the Deployment Engine using Docker Compose, showcasing its powerful federated learning capabilities.
+
+
 .. meta::
     :description: Beginner’s guide to running Flower quickstart examples with the Deployment Engine using Docker Compose, showcasing its powerful federated learning capabilities.
 

@@ -1,4 +1,5 @@
 :og:description: Run scalable federated learning simulations with the Flower Simulation Runtime. Follow step-by-step guides to set up, configure, and execute simulations easily.
+
 .. meta::
     :description: Run scalable federated learning simulations with the Flower Simulation Runtime. Follow step-by-step guides to set up, configure, and execute simulations easily.
 

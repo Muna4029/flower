@@ -1,4 +1,5 @@
 :og:description: Learn how to train a SqueezeNet model on MNIST using federated learning with Flower and fastai in this step-by-step tutorial.
+
 .. meta::
     :description: Learn how to train a SqueezeNet model on MNIST using federated learning with Flower and fastai in this step-by-step tutorial.
 

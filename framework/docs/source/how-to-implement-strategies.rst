@@ -1,4 +1,5 @@
 :og:description: Create custom federated learning strategies in Flower by modifying client sampling, training, aggregation, and evaluation for enhanced flexibility and control.
+
 .. meta::
     :description: Create custom federated learning strategies in Flower by modifying client sampling, training, aggregation, and evaluation for enhanced flexibility and control.
 

@@ -1,4 +1,6 @@
 :og:description: Learn how to build Flower apps with step-by-step guides on installation, configuration, strategy implementation, model checkpoints, and more.
+
+
 .. meta::
     :description: Learn how to build Flower apps with step-by-step guides on installation, configuration, strategy implementation, model checkpoints, and more.
 
