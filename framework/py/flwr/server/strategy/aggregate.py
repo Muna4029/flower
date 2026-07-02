@@ -239,11 +239,18 @@ def aggregate_qffl(
         )
     updates: NDArrays = []
     for i in range(len(deltas[0])):
-        tmp = cast(NDArray, scaled_deltas[0][i])
+        tmp = scaled_deltas[0][i]
         for j in range(1, len(deltas)):
             tmp += scaled_deltas[j][i]
+<<<<<<< HEAD
         updates.append(cast(NDArray, tmp))
     new_parameters = [cast(NDArray, (u - v) * 1.0) for u, v in zip(parameters, updates)]
+=======
+        updates.append(tmp)
+    new_parameters = [
+        cast(NDArray, (u - v) * 1.0) for u, v in zip(parameters, updates)
+    ]
+>>>>>>> 65e0de0d3 (118)
     return new_parameters
 
 
