@@ -26,6 +26,7 @@ def _read_rst_title(file_path: Path) -> str:
         lines = f.readlines()
     return lines[0].strip()
 
+
 def test_exit_code_help_exist() -> None:
     """Test if all exit codes have help message."""
     for name, code in ExitCode.__dict__.items():
