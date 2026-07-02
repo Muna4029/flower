@@ -15,13 +15,10 @@
 """Utility functions for performing operations on Numpy NDArrays."""
 
 
-from typing import Union
+from typing import Any, Union
 
 import numpy as np
-<<<<<<< HEAD
 
-=======
->>>>>>> 667b70d8b (117)
 from flwr.common.typing import NDArray
 
 
@@ -43,11 +40,7 @@ def get_parameters_shape(parameters: list[NDArray]) -> list[tuple[int, ...]]:
 
 
 def get_zero_parameters(
-<<<<<<< HEAD
     dimensions_list: list[tuple[int, ...]], dtype: Any = np.int64
-=======
-    dimensions_list: list[tuple[int, ...]], dtype: object = np.int64
->>>>>>> 667b70d8b (117)
 ) -> list[NDArray]:
     """Generate zero parameters based on the dimensions list."""
     return [np.zeros(dimensions, dtype=dtype) for dimensions in dimensions_list]
