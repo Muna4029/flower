@@ -21,7 +21,7 @@ import unittest
 from collections import OrderedDict
 from io import BytesIO
 from types import ModuleType
-from typing import Any, Optional
+from typing import Any, Optional, cast
 from unittest.mock import Mock, call, patch
 
 import numpy as np
