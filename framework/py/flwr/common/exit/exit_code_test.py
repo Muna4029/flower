@@ -54,7 +54,14 @@ def test_exit_code_help_url_exist() -> None:
 
         # Retrieve the title from the help URL
         f = files[code]
+<<<<<<< HEAD
         title = _read_rst_title(f)
+=======
+        lines = f.read_text().splitlines()
+        title = lines[0].strip()
+        if len(lines) >=3 and lines[0] == lines[2] and len(set(lines[0])) == 1:
+            title = lines[1].strip() 
+>>>>>>> 667b70d8b (117)
 
         # Assert the title is correct
         assert (
