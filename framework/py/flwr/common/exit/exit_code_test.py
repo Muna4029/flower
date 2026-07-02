@@ -22,7 +22,7 @@ from .exit_code import EXIT_CODE_HELP, ExitCode
 
 def _read_rst_title(file_path: Path) -> str:
     """Read the title from a reStructuredText file."""
-    with open(file_path, "r") as f:
+    with open(file_path) as f:
         lines = f.readlines()
     return lines[0].strip()
 
