@@ -56,7 +56,6 @@ def version_callback(
         False,
         "-V",
         "--version",
-        is_flag=True,
         is_eager=True,
         help="Show the version and exit.",
     ),
