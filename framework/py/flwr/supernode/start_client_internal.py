@@ -60,12 +60,6 @@ from flwr.supernode.cli.flwr_clientapp import flwr_clientapp
 from flwr.supernode.nodestate import NodeState, NodeStateFactory
 from flwr.supernode.servicer.clientappio import ClientAppInputs, ClientAppIoServicer
 
-<<<<<<< ours
-DEFAULT_FFS_DIR = get_flwr_dir() / "supernode" / "ffs"
-=======
-from flwr.supernode.servicer.clientappio import ClientAppInputs, ClientAppIoServicer
->>>>>>> theirs
-
 DEFAULT_FFS_DIR = get_flwr_dir() / "supernode" / "ffs"
 
 
