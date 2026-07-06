@@ -44,6 +44,12 @@ from flwr.proto.log_pb2 import (  # pylint: disable=E0611
     PushLogsRequest,
     PushLogsResponse,
 )
+from flwr.proto.message_pb2 import (  # pylint: disable=E0611
+    PullObjectRequest,
+    PullObjectResponse,
+    PushObjectRequest,
+    PushObjectResponse,
+)
 from flwr.proto.node_pb2 import Node  # pylint: disable=E0611
 from flwr.proto.run_pb2 import (  # pylint: disable=E0611
     CreateRunRequest,
@@ -54,12 +60,6 @@ from flwr.proto.run_pb2 import (  # pylint: disable=E0611
     GetRunStatusResponse,
     UpdateRunStatusRequest,
     UpdateRunStatusResponse,
-)
-from flwr.proto.message_pb2 import (  # pylint: disable=E0611
-    PullObjectRequest,
-    PullObjectResponse,
-    PushObjectRequest,
-    PushObjectResponse,
 )
 from flwr.proto.serverappio_pb2 import (  # pylint: disable=E0611
     GetNodesRequest,
@@ -368,7 +368,6 @@ class ServerAppIoServicer(serverappio_pb2_grpc.ServerAppIoServicer):
         }
         return GetRunStatusResponse(run_status_dict=run_status_dict)
 
-
     def PushObject(
         self,
         request: "PushObjectRequest",
@@ -388,6 +387,7 @@ class ServerAppIoServicer(serverappio_pb2_grpc.ServerAppIoServicer):
         log(DEBUG, "ServerAppIoServicer.PullObject")
         # TODO: Implement object retrieval
         return PullObjectResponse(object_id=request.object_id, object_content=b"")
+
 
 def _raise_if(validation_error: bool, request_name: str, detail: str) -> None:
     """Raise a `ValueError` with a detailed message if a validation error occurs."""
