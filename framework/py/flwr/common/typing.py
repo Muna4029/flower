@@ -19,11 +19,9 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Callable, Optional, TypeAlias, Union
 
-import numpy as np
-
-NDArray: TypeAlias = np.ndarray[Any, np.dtype[Any]]
-NDArrayInt: TypeAlias = np.ndarray[Any, np.dtype[np.int_]]
-NDArrayFloat: TypeAlias = np.ndarray[Any, np.dtype[np.float64]]
+NDArray: TypeAlias = Any
+NDArrayInt: TypeAlias = Any
+NDArrayFloat: TypeAlias = Any
 NDArrays: TypeAlias = list[NDArray]
 
 # The following union type contains Python types corresponding to ProtoBuf types that
