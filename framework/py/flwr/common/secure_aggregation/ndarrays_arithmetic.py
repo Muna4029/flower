@@ -21,7 +21,7 @@ import numpy as np
 
 from flwr.common.typing import NDArray
 
-_DEFAULT_DTYPE = np.dtype(np.int64)
+_DEFAULT_DTYPE: np.dtype[Any] = np.dtype(np.int64)
 
 
 def factor_combine(factor: int, parameters: list[NDArray]) -> list[NDArray]:
@@ -33,7 +33,7 @@ def factor_extract(
     parameters: list[NDArray],
 ) -> tuple[int, list[NDArray]]:
     """Extract factor from parameters."""
-    return parameters[0][0], parameters[1:]
+    return int(parameters[0][0]), parameters[1:]
 
 
 def get_parameters_shape(parameters: list[NDArray]) -> list[tuple[int, ...]]:
@@ -42,7 +42,7 @@ def get_parameters_shape(parameters: list[NDArray]) -> list[tuple[int, ...]]:
 
 
 def get_zero_parameters(
-    dimensions_list: list[tuple[int, ...]], dtype: np.dtype[Any] = _DEFAULT_DTYPE
+    dimensions_list: list[tuple[int, ...]], dtype: Any = _DEFAULT_DTYPE
 ) -> list[NDArray]:
     """Generate zero parameters based on the dimensions list."""
     return [np.zeros(dimensions, dtype=dtype) for dimensions in dimensions_list]

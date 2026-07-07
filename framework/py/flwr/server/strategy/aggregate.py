@@ -55,10 +55,11 @@ def aggregate_inplace(results: list[tuple[ClientProxy, FitRes]]) -> NDArrays:
     def _try_inplace(
         x: NDArray, y: Union[NDArray, np.float64], np_binary_op: np.ufunc
     ) -> NDArray:
-        return (  # type: ignore[no-any-return]
-            np_binary_op(x, y, out=x)
-            if np.can_cast(y, x.dtype, casting="same_kind")
-            else np_binary_op(x, np.array(y, x.dtype), out=x)
+        y_arr = np.asarray(y)
+        return (
+            np_binary_op(x, y_arr, out=x)
+            if np.can_cast(y_arr, x.dtype, casting="same_kind")
+            else np_binary_op(x, np.array(y_arr, x.dtype), out=x)
         )
 
     # Let's do in-place aggregation

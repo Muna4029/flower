@@ -22,8 +22,8 @@ from typing import Any, Callable, Optional, TypeAlias, Union
 import numpy as np
 
 NDArray: TypeAlias = np.ndarray[Any, np.dtype[Any]]
-NDArrayInt: TypeAlias = np.ndarray[Any, np.dtype[np.int_]]
-NDArrayFloat: TypeAlias = np.ndarray[Any, np.dtype[np.float64]]
+NDArrayInt: TypeAlias = np.ndarray[Any, np.dtype[Any]]
+NDArrayFloat: TypeAlias = np.ndarray[Any, np.dtype[Any]]
 NDArrays = list[NDArray]
 
 # The following union type contains Python types corresponding to ProtoBuf types that
