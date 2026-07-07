@@ -188,7 +188,9 @@ def start_client_internal(
 
             try:
                 # Retrieve message, context, run and fab for this run
-                message = state.get_message(run_ids=run_id, is_reply=False, limit=1)[0]
+                message = state.get_messages(
+                    run_ids=[run_id], is_reply=False, limit=1
+                )[0]
                 context = cast(Context, state.get_context(run_id))
                 run = cast(Run, state.get_run(run_id))
                 fab = Fab(run.fab_hash, ffs.get(run.fab_hash)[0])  # type: ignore
