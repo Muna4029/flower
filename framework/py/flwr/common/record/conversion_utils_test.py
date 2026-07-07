@@ -17,12 +17,11 @@
 
 import unittest
 from io import BytesIO
-from typing import cast
+from typing import Any
 
 import numpy as np
 
 from ..constant import SType
-from ..typing import NDArray
 from .conversion_utils import array_from_numpy
 
 
@@ -32,12 +31,12 @@ class TestArrayFromNumpy(unittest.TestCase):
     def test_array_from_numpy(self) -> None:
         """Test the array_from_numpy function."""
         # Prepare
-        original_array = np.array([1, 2, 3], dtype=np.float32)
+        original_array: Any = np.array([1, 2, 3], dtype=np.float32)
 
         # Execute
         array_instance = array_from_numpy(original_array)
         buffer = BytesIO(array_instance.data)
-        deserialized_array = cast(NDArray, np.load(buffer, allow_pickle=False))
+        deserialized_array: Any = np.load(buffer, allow_pickle=False)
 
         # Assert
         self.assertEqual(array_instance.dtype, str(original_array.dtype))

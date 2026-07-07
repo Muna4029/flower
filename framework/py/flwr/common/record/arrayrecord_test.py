@@ -31,7 +31,11 @@ from parameterized import parameterized
 from flwr.common import ndarray_to_bytes
 
 from ..constant import SType
-from ..inflatable import get_object_body, get_object_type_from_object_content
+from ..inflatable import (
+    InflatableObject,
+    get_object_body,
+    get_object_type_from_object_content,
+)
 from ..typing import NDArray
 from .array import Array
 from .arrayrecord import ArrayRecord
@@ -392,7 +396,13 @@ class TestArrayRecord(unittest.TestCase):
             ArrayRecord.inflate(arr_rec_b)
         # Inflate but passing wrong Children type
         with pytest.raises(ValueError):
-            ArrayRecord.inflate(arr_rec_b, children={"123": np.array(5)})
+            ArrayRecord.inflate(
+                arr_rec_b,
+                children=cast(
+                    dict[str, InflatableObject],
+                    {"123": np.array(5)},
+                ),
+            )
         # Inflate but passing children with wrong Object ID
         with pytest.raises(ValueError):
             ArrayRecord.inflate(arr_rec_b, children={"123": Array(arr)})
