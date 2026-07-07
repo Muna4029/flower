@@ -19,7 +19,7 @@ import json
 import pickle
 from collections import OrderedDict
 from copy import deepcopy
-from typing import Callable, Union, cast
+from typing import Any, Callable, Union, cast
 from unittest.mock import Mock, PropertyMock, patch
 
 import numpy as np
@@ -66,11 +66,12 @@ def ndarray_to_array(ndarray: NDArray) -> Array:
 def test_ndarray_to_array() -> None:
     """Test creation of Array object from NumPy ndarray."""
     shape = (2, 7, 9)
-    arr = np.eye(*shape)
+    arr: Any = np.eye(*shape)
 
     array = ndarray_to_array(arr)
 
-    arr_ = np.frombuffer(buffer=array.data, dtype=array.dtype).reshape(array.shape)
+    arr_buffer: Any = np.frombuffer(buffer=array.data, dtype=array.dtype)
+    arr_ = arr_buffer.reshape(array.shape)
 
     assert np.array_equal(arr, arr_)
 
@@ -195,7 +196,7 @@ def test_set_metrics_to_metricrecord_with_correct_types(
     m_record = MetricRecord()
 
     labels = [1, 2.0]
-    arrays = get_ndarrays()
+    arrays: list[Any] = get_ndarrays()
 
     my_metrics = OrderedDict(
         {key_type(label): value_fn(arr) for label, arr in zip(labels, arrays)}
@@ -248,7 +249,7 @@ def test_set_metrics_to_metricrecord_with_incorrect_types(
     m_record = MetricRecord()
 
     labels = [1, 2.0]
-    arrays = get_ndarrays()
+    arrays: list[Any] = get_ndarrays()
 
     my_metrics = OrderedDict(
         {key_type(label): value_fn(arr) for label, arr in zip(labels, arrays)}
@@ -271,7 +272,7 @@ def test_set_metrics_to_metricrecord_with_and_without_keeping_input(
     """Test keep_input functionality for MetricRecord."""
     # constructing a valid input
     labels = [1, 2.0]
-    arrays = get_ndarrays()
+    arrays: list[Any] = get_ndarrays()
     my_metrics = cast(
         dict[str, MetricRecordValues],
         {str(label): arr.flatten().tolist() for label, arr in zip(labels, arrays)},
@@ -312,7 +313,7 @@ def test_set_configs_to_configrecord_with_correct_types(
 ) -> None:
     """Test adding configs of various types to a ConfigRecord."""
     labels = [1, 2.0]
-    arrays = get_ndarrays()
+    arrays: list[Any] = get_ndarrays()
 
     my_configs = OrderedDict(
         {key_type(label): value_fn(arr) for label, arr in zip(labels, arrays)}
@@ -358,7 +359,7 @@ def test_set_configs_to_configrecord_with_incorrect_types(
     c_record = ConfigRecord()
 
     labels = [1, 2.0]
-    arrays = get_ndarrays()
+    arrays: list[Any] = get_ndarrays()
 
     my_configs = OrderedDict(
         {key_type(label): value_fn(arr) for label, arr in zip(labels, arrays)}

@@ -17,13 +17,11 @@
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Callable, Optional, TypeAlias, Union
+from typing import Any, Callable, Optional, TypeAlias, Union
 
-import numpy as np
-
-NDArray: TypeAlias = np.ndarray
-NDArrayInt: TypeAlias = np.ndarray
-NDArrayFloat: TypeAlias = np.ndarray
+NDArray: TypeAlias = Any
+NDArrayInt: TypeAlias = Any
+NDArrayFloat: TypeAlias = Any
 NDArrays: TypeAlias = list[NDArray]
 
 # The following union type contains Python types corresponding to ProtoBuf types that

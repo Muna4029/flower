@@ -391,8 +391,9 @@ class TestArrayRecord(unittest.TestCase):
         with pytest.raises(ValueError):
             ArrayRecord.inflate(arr_rec_b)
         # Inflate but passing wrong Children type
+        wrong_children: Any = {"123": np.array(5)}
         with pytest.raises(ValueError):
-            ArrayRecord.inflate(arr_rec_b, children={"123": np.array(5)})  # type: ignore
+            ArrayRecord.inflate(arr_rec_b, children=wrong_children)
         # Inflate but passing children with wrong Object ID
         with pytest.raises(ValueError):
             ArrayRecord.inflate(arr_rec_b, children={"123": Array(arr)})
@@ -408,7 +409,8 @@ class TestArrayRecord(unittest.TestCase):
 )
 def test_count_bytes(shape: tuple[int, ...], dtype: str) -> None:
     """Test bytes in a ArrayRecord are computed correctly."""
-    original_array = np.random.randn(*shape).astype(np.dtype(dtype))
+    random_array: Any = np.random.randn(*shape)
+    original_array = random_array.astype(np.dtype(dtype))
 
     buff = ndarray_to_bytes(original_array)
 
