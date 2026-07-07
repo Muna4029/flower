@@ -223,12 +223,18 @@ class ArrayRecord(TypedDict[str, Array], InflatableObject):
 
         # Handle PyTorch state_dict
         if not init_method or init_method == "state_dict":
+            torch_module = sys.modules.get("torch")
+            torch_tensor_type = (
+                getattr(torch_module, "Tensor", None)
+                if torch_module is not None
+                else None
+            )
             # Type check the input
             if (
-                (torch := sys.modules.get("torch")) is not None
+                torch_tensor_type is not None
                 and isinstance(arg, dict)
                 and all(isinstance(k, str) for k in arg.keys())
-                and all(isinstance(v, torch.Tensor) for v in arg.values())
+                and all(isinstance(v, torch_tensor_type) for v in arg.values())
             ):
                 torch_state_dict = cast(OrderedDict[str, Any], arg)
                 converted = self.from_torch_state_dict(

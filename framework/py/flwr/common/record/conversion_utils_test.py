@@ -17,10 +17,12 @@
 
 import unittest
 from io import BytesIO
+from typing import cast
 
 import numpy as np
 
 from ..constant import SType
+from ..typing import NDArray
 from .conversion_utils import array_from_numpy
 
 
@@ -35,7 +37,7 @@ class TestArrayFromNumpy(unittest.TestCase):
         # Execute
         array_instance = array_from_numpy(original_array)
         buffer = BytesIO(array_instance.data)
-        deserialized_array = np.load(buffer, allow_pickle=False)
+        deserialized_array = cast(NDArray, np.load(buffer, allow_pickle=False))
 
         # Assert
         self.assertEqual(array_instance.dtype, str(original_array.dtype))

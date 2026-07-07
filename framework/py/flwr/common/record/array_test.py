@@ -19,7 +19,7 @@ import sys
 import unittest
 from io import BytesIO
 from types import ModuleType
-from typing import Any
+from typing import Any, cast
 from unittest.mock import Mock
 
 import numpy as np
@@ -107,7 +107,7 @@ class TestArray(unittest.TestCase):
         # Execute
         array_instance = Array.from_numpy_ndarray(original_array)
         buffer = BytesIO(array_instance.data)
-        deserialized_array = np.load(buffer, allow_pickle=False)
+        deserialized_array = cast(NDArray, np.load(buffer, allow_pickle=False))
 
         # Assert
         self.assertEqual(array_instance.dtype, str(original_array.dtype))
