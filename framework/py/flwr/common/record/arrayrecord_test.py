@@ -21,7 +21,7 @@ import unittest
 from collections import OrderedDict
 from io import BytesIO
 from types import ModuleType
-from typing import Any, Optional
+from typing import Any, Optional, cast
 from unittest.mock import Mock, call, patch
 
 import numpy as np
@@ -31,7 +31,11 @@ from parameterized import parameterized
 from flwr.common import ndarray_to_bytes
 
 from ..constant import SType
-from ..inflatable import get_object_body, get_object_type_from_object_content
+from ..inflatable import (
+    InflatableObject,
+    get_object_body,
+    get_object_type_from_object_content,
+)
 from ..typing import NDArray
 from .array import Array
 from .arrayrecord import ArrayRecord
@@ -393,8 +397,9 @@ class TestArrayRecord(unittest.TestCase):
         # Inflate but passing wrong Children type
         with pytest.raises(ValueError):
             ArrayRecord.inflate(
-                arr_rec_b, children={"123": np.array(5)}
-            )  # type: ignore[arg-type]
+                arr_rec_b,
+                children={"123": cast(InflatableObject, np.array(5))},
+            )
         # Inflate but passing children with wrong Object ID
         with pytest.raises(ValueError):
             ArrayRecord.inflate(arr_rec_b, children={"123": Array(arr)})
@@ -410,7 +415,7 @@ class TestArrayRecord(unittest.TestCase):
 )
 def test_count_bytes(shape: list[int], dtype: str) -> None:
     """Test bytes in a ArrayRecord are computed correctly."""
-    original_array = np.random.randn(*shape).astype(np.dtype(dtype))
+    original_array = np.asarray(np.random.randn(*shape), dtype=np.dtype(dtype))
 
     buff = ndarray_to_bytes(original_array)
 

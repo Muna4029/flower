@@ -68,9 +68,11 @@ def test_ndarray_to_array() -> None:
     shape = (2, 7, 9)
     arr = np.eye(*shape)
 
-    array = ndarray_to_array(arr)
+    array: Array = ndarray_to_array(arr)
 
-    arr_ = np.frombuffer(buffer=array.data, dtype=array.dtype).reshape(array.shape)
+    arr_: NDArray = np.frombuffer(buffer=array.data, dtype=array.dtype).reshape(
+        array.shape
+    )
 
     assert np.array_equal(arr, arr_)
 
