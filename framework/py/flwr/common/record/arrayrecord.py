@@ -230,9 +230,7 @@ class ArrayRecord(TypedDict[str, Array], InflatableObject):
                 and all(isinstance(k, str) for k in arg.keys())
                 and all(isinstance(v, torch.Tensor) for v in arg.values())
             ):
-                torch_state_dict = cast(
-                    OrderedDict[str, torch.Tensor], arg  # type: ignore
-                )
+                torch_state_dict = cast(OrderedDict[str, Any], arg)
                 converted = self.from_torch_state_dict(
                     torch_state_dict, keep_input=keep_input
                 )
@@ -273,8 +271,6 @@ class ArrayRecord(TypedDict[str, Array], InflatableObject):
             record[str(i)] = Array.from_numpy_ndarray(ndarrays[i])
 
             if not keep_input:
-                # Remove the reference
-                ndarrays[i] = None  # type: ignore
                 total_serialized_bytes += len(record[str(i)].data)
 
                 # If total serialized data exceeds the threshold, trigger GC
