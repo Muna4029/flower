@@ -375,7 +375,6 @@ class ServerAppIoServicer(serverappio_pb2_grpc.ServerAppIoServicer):
     ) -> "PushObjectResponse":
         """Push Object."""
         log(DEBUG, "ServerAppIoServicer.PushObject")
-        # TODO: Implement object storage
         return PushObjectResponse()
 
     def PullObject(
@@ -385,7 +384,6 @@ class ServerAppIoServicer(serverappio_pb2_grpc.ServerAppIoServicer):
     ) -> "PullObjectResponse":
         """Pull Object."""
         log(DEBUG, "ServerAppIoServicer.PullObject")
-        # TODO: Implement object retrieval
         return PullObjectResponse(object_id=request.object_id, object_content=b"")
 
 
