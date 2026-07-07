@@ -17,7 +17,7 @@
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Callable, Optional, TypeAlias, Union
+from typing import Callable, Optional, TypeAlias, Union
 
 import numpy as np
 
