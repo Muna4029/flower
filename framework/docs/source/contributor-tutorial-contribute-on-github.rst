@@ -281,7 +281,7 @@ And with Flower's repository:
 *******************************
 
 Problem
-========
+=======
 
 For our documentation, we've started to use the `Diàtaxis framework
 <https://diataxis.fr/>`_.
@@ -315,7 +315,7 @@ and setting up the Flower repo, here's what you should do:
   <contributor-how-to-write-documentation.html#edit-an-existing-page>`_
 
 Rename file
------------
+===========
 
 You might have noticed that the file name still reflects the old wording. If we just
 change the file, then we break all existing links to it - it is **very important** to
@@ -330,7 +330,7 @@ This will cause a redirect from ``saving-progress.html`` to ``save-progress.html
 links will continue to work.
 
 Apply changes in the index file
--------------------------------
+===============================
 
 For the lateral navigation bar to work properly, it is very important to update the
 ``index.rst`` file as well. This is where we define the whole arborescence of the
@@ -339,7 +339,7 @@ navbar.
 - Find and modify the file name in ``index.rst``
 
 Open PR
--------
+=======
 
 - Commit the changes (commit messages are always imperative: "Do something", in this
   case "Change …")
