@@ -402,7 +402,7 @@ class Message(InflatableObject):
             content = None
             error = error_from_proto(proto_message.error)
         else:
-            content = cast(RecordDict, children[children_ids[0]]
+            content = cast(RecordDict, children[children_ids[0]])
             error = None
         # Return message
         return make_message(
