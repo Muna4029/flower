@@ -14,7 +14,6 @@
 # ==============================================================================
 """Utility functions for performing operations on Numpy NDArrays."""
 
-
 from typing import Union
 
 import numpy as np
