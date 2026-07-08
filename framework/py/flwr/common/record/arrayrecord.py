@@ -33,7 +33,6 @@ from .array import Array
 from .typeddict import TypedDict
 
 if TYPE_CHECKING:
-    import torch
     from torch import Tensor
 else:
     Tensor = Any
