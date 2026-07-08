@@ -17,8 +17,8 @@
 
 from typing import Any, Union
 
-from flwr.common.typing import NDArray
 import numpy as np
+from flwr.common.typing import NDArray
 
 
 def factor_combine(factor: int, parameters: list[NDArray]) -> list[NDArray]:
