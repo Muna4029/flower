@@ -15,7 +15,7 @@
 """Utility functions for performing operations on Numpy NDArrays."""
 
 
-from typing import Any, Union
+from typing import Union
 
 import numpy as np
 from numpy.typing import DTypeLike
@@ -63,7 +63,9 @@ def parameters_subtraction(
     return [parameters1[idx] - parameters2[idx] for idx in range(len(parameters1))]
 
 
-def parameters_mod(parameters: list[FlowerNDArray], divisor: int) -> list[FlowerNDArray]:
+def parameters_mod(
+    parameters: list[FlowerNDArray], divisor: int
+) -> list[FlowerNDArray]:
     """Take mod of parameters with an integer divisor."""
     if bin(divisor).count("1") == 1:
         msk = divisor - 1
