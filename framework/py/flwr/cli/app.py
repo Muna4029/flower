@@ -55,6 +55,7 @@ def version_callback(
     ver: bool = typer.Option(
         False,
         "--version",
+        "-V",
         is_flag=True,
         is_eager=True,
         help="Show the version and exit.",

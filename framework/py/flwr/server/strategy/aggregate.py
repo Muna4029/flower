@@ -13,6 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 """Aggregation functions for strategy implementations."""
+
 # mypy: disallow_untyped_calls=False
 
 from functools import partial, reduce
@@ -45,12 +46,12 @@ def aggregate(results: list[tuple[NDArrays, int]]) -> NDArrays:
 def aggregate_inplace(results: list[tuple[ClientProxy, FitRes]]) -> NDArrays:
     """Compute in-place weighted average."""
     # Count total examples
-    num_examples_total = sum(fit_res.num_examples for (_, fit_res) in results)
+    num_examples_total = sum(fit_res.num_examples for _, fit_res in results)
 
     # Compute scaling factors for each result
-    scaling_factors = np.asarray(
-        [fit_res.num_examples / num_examples_total for _, fit_res in results]
-    )
+    scaling_factors: list[float] = [
+        fit_res.num_examples / num_examples_total for _, fit_res in results
+    ]
 
     def _try_inplace(
         x: NDArray, y: Union[NDArray, np.float64], np_binary_op: np.ufunc
@@ -123,7 +124,9 @@ def aggregate_krum(
 
     if to_keep > 0:
         # Choose to_keep clients and return their average (MultiKrum)
-        best_indices = np.argsort(scores)[::-1][len(scores) - to_keep :]  # noqa: E203
+        best_indices = np.argsort(scores)[::-1][
+            len(scores) - to_keep :
+        ].tolist()  # noqa: E203
         best_results = [results[i] for i in best_indices]
         return aggregate(best_results)
 
@@ -235,7 +238,9 @@ def aggregate_qffl(
         for j in range(1, len(deltas)):
             tmp += scaled_deltas[j][i]
         updates.append(tmp)
-    new_parameters = [(u - v) * 1.0 for u, v in zip(parameters, updates)]
+    new_parameters: NDArrays = [
+        cast(NDArray, (u - v) * 1.0) for u, v in zip(parameters, updates)
+    ]
     return new_parameters
 
 
@@ -245,11 +250,11 @@ def _compute_distances(weights: list[NDArrays]) -> NDArray:
     Input: weights - list of weights vectors
     Output: distances - matrix distance_matrix of squared distances between the vectors
     """
-    flat_w = np.array([np.concatenate(p, axis=None).ravel() for p in weights])
+    flat_w: list[Any] = [np.concatenate(p, axis=None).ravel() for p in weights]
     distance_matrix = np.zeros((len(weights), len(weights)))
     for i, flat_w_i in enumerate(flat_w):
         for j, flat_w_j in enumerate(flat_w):
-            delta = flat_w_i - flat_w_j
+            delta = cast(NDArray, cast(Any, flat_w_i) - cast(Any, flat_w_j))
             norm = np.linalg.norm(delta)
             distance_matrix[i, j] = norm**2
     return distance_matrix
@@ -366,7 +371,10 @@ def _aggregate_n_closest_weights(
             other_weights_layer = other_w[layer_id]
             other_weights_layer_list.append(other_weights_layer)
         other_weights_layer_np = np.array(other_weights_layer_list)
-        diff_np = np.abs(layer_weights - other_weights_layer_np)
+        diff_np = cast(
+            NDArray,
+            np.abs(cast(Any, layer_weights) - cast(Any, other_weights_layer_np)),
+        )
         # Create indices of the smallest differences
         # We do not need the exact order but just the beta closest weights
         # therefore np.argpartition is used instead of np.argsort
