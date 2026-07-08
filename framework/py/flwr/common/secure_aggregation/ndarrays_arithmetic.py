@@ -14,6 +14,8 @@
 # ==============================================================================
 """Utility functions for performing operations on Numpy NDArrays."""
 
+from typing import Any, Union
+
 import numpy as np
 from flwr.common.typing import NDArray
 
