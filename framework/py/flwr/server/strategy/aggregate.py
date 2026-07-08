@@ -31,7 +31,8 @@ def aggregate(results: list[tuple[NDArrays, int]]) -> NDArrays:
 
     # Create a list of weights, each multiplied by the related number of examples
     weighted_weights = [
-        [layer * num_examples for layer in weights] for weights, num_examples in results
+        [layer * num_examples for layer in weights]
+        for weights, num_examples in results
     ]
 
     # Compute average weights of each layer
@@ -229,7 +230,9 @@ def aggregate_qffl(
     demominator: float = np.sum(np.asarray(hs_fll))
     scaled_deltas = []
     for client_delta in deltas:
-        scaled_deltas.append([layer * 1.0 / demominator for layer in client_delta])
+        scaled_deltas.append(
+            [layer * 1.0 / demominator for layer in client_delta]
+        )
     updates = []
     for i in range(len(deltas[0])):
         tmp = scaled_deltas[0][i]
