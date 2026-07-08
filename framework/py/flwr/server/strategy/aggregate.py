@@ -383,5 +383,7 @@ def _aggregate_n_closest_weights(
         beta_closest_weights = np.take_along_axis(
             other_weights_layer_np, indices=indices, axis=0
         )[:beta_closest]
-        aggregated_weights.append(cast(NDArray, np.mean(beta_closest_weights, axis=0)))
+        aggregated_weights.append(
+            cast(NDArray, np.mean(beta_closest_weights, axis=0))
+        )
     return aggregated_weights
