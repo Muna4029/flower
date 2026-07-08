@@ -14,7 +14,6 @@
 # ==============================================================================
 """Unit tests for Array."""
 
-
 import sys
 import unittest
 from io import BytesIO
@@ -107,7 +106,7 @@ class TestArray(unittest.TestCase):
         # Execute
         array_instance: Array = Array.from_numpy_ndarray(original_array)
         buffer = BytesIO(array_instance.data)
-        deserialized_array = np.load(buffer, allow_pickle=False)
+        deserialized_array: NDArray = np.load(buffer, allow_pickle=False)
 
         # Assert
         self.assertEqual(array_instance.dtype, str(original_array.dtype))

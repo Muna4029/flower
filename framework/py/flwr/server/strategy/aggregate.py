@@ -128,7 +128,7 @@ def aggregate_krum(
     if to_keep > 0:
         # Choose to_keep clients and return their average (MultiKrum)
         best_indices = np.argsort(scores)[::-1][len(scores) - to_keep :]  # noqa: E203
-        best_results = [results[i] for i in best_indices]
+        best_results = [results[int(i)] for i in best_indices]
         return aggregate(best_results)
 
     # Return the model parameters that minimize the score (Krum)
@@ -383,8 +383,9 @@ def _aggregate_n_closest_weights(
         indices = np.argpartition(diff_np, kth=beta_closest - 1, axis=0)
         # Take the weights (coordinate-wise) corresponding to the beta of the
         # closest distances
-        beta_closest_weights = np.take_along_axis(
-            other_weights_layer_np, indices=indices, axis=0
+        beta_closest_weights = cast(
+            NDArray,
+            np.take_along_axis(other_weights_layer_np, indices=indices, axis=0),
         )[:beta_closest]
         aggregated_weights.append(cast(NDArray, np.mean(beta_closest_weights, axis=0)))
     return aggregated_weights

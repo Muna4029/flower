@@ -231,7 +231,7 @@ class ArrayRecord(TypedDict[str, Array], InflatableObject):
                 and all(isinstance(k, str) for k in arg.keys())
                 and all(isinstance(v, torch_module.Tensor) for v in arg.values())
             ):
-                torch_state_dict = cast(OrderedDict[str, Tensor], arg)
+                torch_state_dict = cast(OrderedDict[str, Any], arg)
                 converted = self.from_torch_state_dict(
                     torch_state_dict, keep_input=keep_input
                 )

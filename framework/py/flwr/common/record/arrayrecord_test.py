@@ -14,7 +14,6 @@
 # ==============================================================================
 """Unit tests for ArrayRecord."""
 
-
 import json
 import sys
 import unittest
