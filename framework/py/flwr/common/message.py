@@ -389,8 +389,10 @@ class Message(InflatableObject):
         # If the nmessage carried an error, the returned listed should be empty
         if children_ids != list(children.keys()):
             raise ValueError(
-                f"Mismatch in children object IDs: expected {children_ids}, but received {list(children.keys())}. "
-                "The provided children must exactly match the IDs specified in the object head."
+                f"Mismatch in children object IDs: expected {children_ids}, "
+                f"but received {list(children.keys())}. "
+                "The provided children must exactly match the IDs specified "
+                "in the object head."
             )
 
         # Inflate content
