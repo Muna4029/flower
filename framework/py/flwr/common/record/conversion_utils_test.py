@@ -21,8 +21,8 @@ from io import BytesIO
 import numpy as np
 
 from ..constant import SType
-from .conversion_utils import array_from_numpy
 from .array import Array
+from .conversion_utils import array_from_numpy
 
 
 class TestArrayFromNumpy(unittest.TestCase):
