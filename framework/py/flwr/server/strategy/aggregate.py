@@ -13,6 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 """Aggregation functions for strategy implementations."""
+
 # mypy: disallow_untyped_calls=False
 
 from functools import partial, reduce
@@ -31,8 +32,7 @@ def aggregate(results: list[tuple[NDArrays, int]]) -> NDArrays:
 
     # Create a list of weights, each multiplied by the related number of examples
     weighted_weights = [
-        [layer * num_examples for layer in weights]
-        for weights, num_examples in results
+        [layer * num_examples for layer in weights] for weights, num_examples in results
     ]
 
     # Compute average weights of each layer
@@ -58,9 +58,11 @@ def aggregate_inplace(results: list[tuple[ClientProxy, FitRes]]) -> NDArrays:
         y_arr = np.asarray(y)
         return cast(
             NDArray,
-            np_binary_op(x, y_arr, out=x)
-            if np.can_cast(y_arr, x.dtype, casting="same_kind")
-            else np_binary_op(x, np.array(y_arr, x.dtype), out=x),
+            (
+                np_binary_op(x, y_arr, out=x)
+                if np.can_cast(y_arr, x.dtype, casting="same_kind")
+                else np_binary_op(x, np.array(y_arr, x.dtype), out=x)
+            ),
         )
 
     # Let's do in-place aggregation
@@ -230,9 +232,7 @@ def aggregate_qffl(
     demominator: float = np.sum(np.asarray(hs_fll))
     scaled_deltas = []
     for client_delta in deltas:
-        scaled_deltas.append(
-            [layer * 1.0 / demominator for layer in client_delta]
-        )
+        scaled_deltas.append([layer * 1.0 / demominator for layer in client_delta])
     updates = []
     for i in range(len(deltas[0])):
         tmp = scaled_deltas[0][i]
@@ -386,7 +386,5 @@ def _aggregate_n_closest_weights(
         beta_closest_weights = np.take_along_axis(
             other_weights_layer_np, indices=indices, axis=0
         )[:beta_closest]
-        aggregated_weights.append(
-            cast(NDArray, np.mean(beta_closest_weights, axis=0))
-        )
+        aggregated_weights.append(cast(NDArray, np.mean(beta_closest_weights, axis=0)))
     return aggregated_weights
