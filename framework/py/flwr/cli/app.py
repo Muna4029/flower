@@ -54,7 +54,7 @@ typer_click_object = get_command(app)
 def version_callback(
     ver: bool = typer.Option(
         False,
-        "--version",
+        "--version/--no-version",
         is_eager=True,
         help="Show the version and exit.",
     ),

@@ -61,7 +61,7 @@ def ndarray_to_array(ndarray: NDArray) -> Array:
 def test_ndarray_to_array() -> None:
     """Test creation of Array object from NumPy ndarray."""
     shape = (2, 7, 9)
-    arr = np.eye(*shape)
+    arr: NDArray = np.eye(*shape)
 
     array = ndarray_to_array(arr)
 
@@ -76,7 +76,7 @@ def test_parameters_to_array_and_back() -> None:
 
     # Array represents a single array, unlike parameters, which represent a
     # list of arrays
-    ndarray = ndarrays[0]
+    ndarray: NDArray = ndarrays[0]
 
     parameters = ndarrays_to_parameters([ndarray])
 
