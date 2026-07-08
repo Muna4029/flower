@@ -27,7 +27,7 @@ from flwr.server.client_proxy import ClientProxy
 def aggregate(results: list[tuple[NDArrays, int]]) -> NDArrays:
     """Compute weighted average."""
     # Calculate the total number of examples used during training
-    num_examples_total = sum(num_examples for (_, num_examples) in results)
+    num_examples_total = sum(num_examples for _, num_examples in results)
 
     # Create a list of weights, each multiplied by the related number of examples
     weighted_weights = [
@@ -44,7 +44,7 @@ def aggregate(results: list[tuple[NDArrays, int]]) -> NDArrays:
 def aggregate_inplace(results: list[tuple[ClientProxy, FitRes]]) -> NDArrays:
     """Compute in-place weighted average."""
     # Count total examples
-    num_examples_total = sum(fit_res.num_examples for (_, fit_res) in results)
+    num_examples_total = sum(fit_res.num_examples for _, fit_res in results)
 
     # Compute scaling factors for each result
     scaling_factors = [
@@ -57,11 +57,9 @@ def aggregate_inplace(results: list[tuple[ClientProxy, FitRes]]) -> NDArrays:
         y_arr = np.asarray(y)
         return cast(
             NDArray,
-            (
-                np_binary_op(x, y_arr, out=x)
-                if np.can_cast(y_arr, x.dtype, casting="same_kind")
-                else np_binary_op(x, np.array(y_arr, x.dtype), out=x)
-            ),
+            np_binary_op(x, y_arr, out=x)
+            if np.can_cast(y_arr, x.dtype, casting="same_kind")
+            else np_binary_op(x, np.array(y_arr, x.dtype), out=x),
         )
 
     # Let's do in-place aggregation
@@ -219,7 +217,7 @@ def aggregate_bulyan(
 
 def weighted_loss_avg(results: list[tuple[int, float]]) -> float:
     """Aggregate evaluation results obtained from multiple clients."""
-    num_total_evaluation_examples = sum(num_examples for (num_examples, _) in results)
+    num_total_evaluation_examples = sum(num_examples for num_examples, _ in results)
     weighted_losses = [num_examples * loss for num_examples, loss in results]
     return sum(weighted_losses) / num_total_evaluation_examples
 
@@ -373,7 +371,8 @@ def _aggregate_n_closest_weights(
             other_weights_layer_list.append(other_weights_layer)
         other_weights_layer_np = np.array(other_weights_layer_list)
         diff_np = cast(
-            NDArray, np.abs(cast(Any, layer_weights) - other_weights_layer_np)
+            NDArray,
+            np.abs(cast(Any, layer_weights) - other_weights_layer_np),
         )
         # Create indices of the smallest differences
         # We do not need the exact order but just the beta closest weights
@@ -384,7 +383,5 @@ def _aggregate_n_closest_weights(
         beta_closest_weights = np.take_along_axis(
             other_weights_layer_np, indices=indices, axis=0
         )[:beta_closest]
-        aggregated_weights.append(
-            cast(NDArray, np.mean(beta_closest_weights, axis=0))
-        )
+        aggregated_weights.append(cast(NDArray, np.mean(beta_closest_weights, axis=0)))
     return aggregated_weights
