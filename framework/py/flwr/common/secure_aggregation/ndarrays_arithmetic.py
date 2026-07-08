@@ -22,9 +22,7 @@ from numpy.typing import DTypeLike
 from flwr.common.typing import NDArray as FlowerNDArray
 
 
-def factor_combine(
-    factor: int, parameters: list[FlowerNDArray]
-) -> list[FlowerNDArray]:
+def factor_combine(factor: int, parameters: list[FlowerNDArray]) -> list[FlowerNDArray]:
     """Combine factor with parameters."""
     return [np.array([factor])] + parameters
 
