@@ -20,6 +20,7 @@ from io import BytesIO
 import numpy as np
 
 from ..constant import SType
+from ..typing import NDArray
 from .array import Array
 from .conversion_utils import array_from_numpy
 
