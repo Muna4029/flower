@@ -17,7 +17,7 @@
 # mypy: disallow_untyped_calls=False
 
 from functools import partial, reduce
-from typing import Any, Callable, Union
+from typing import Any, Callable, Union, cast
 
 import numpy as np
 
