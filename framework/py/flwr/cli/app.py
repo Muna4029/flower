@@ -121,7 +121,35 @@ def _patch_make_metavar() -> None:
 
 _patch_make_metavar()
 
+
+def _show_version(ctx: click.Context, _param: click.Parameter, value: bool) -> None:
+    """Print the version and exit when requested."""
+    if not value:
+        return
+    click.echo(f"Flower version: {package_version}")
+    ctx.exit()
+
+
+class FlowerGroup(typer.core.TyperGroup):
+    """Typer group with a root-only version flag."""
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        params = list(kwargs.pop("params", []) or [])
+        params.append(
+            click.Option(
+                ["--version"],
+                is_flag=True,
+                is_eager=True,
+                expose_value=False,
+                callback=_show_version,
+                help="Show the version and exit.",
+            )
+        )
+        super().__init__(*args, params=params, **kwargs)
+
+
 app = typer.Typer(
+    cls=FlowerGroup,
     help=typer.style(
         "flwr is the Flower command line interface.",
         fg=typer.colors.BRIGHT_YELLOW,
@@ -139,22 +167,6 @@ app.command()(log)
 app.command()(ls)
 app.command()(stop)
 app.command()(login)
-
-
-@app.callback(invoke_without_command=True)
-def version_callback(
-    version: bool = typer.Option(
-        False,
-        "--version",
-        is_eager=True,
-        is_flag=True,
-        help="Show the version and exit.",
-    ),
-) -> None:
-    """Flower command line interface."""
-    if version:
-        typer.secho(f"Flower version: {package_version}", fg="blue")
-        raise typer.Exit()
 
 
 typer_click_object = get_command(app)
