@@ -15,7 +15,7 @@
 """Flower command line interface."""
 
 import inspect
-from typing import Annotated, Any, Callable, Optional
+from typing import Annotated, Any, Callable, Optional, cast
 
 import click
 import typer
@@ -39,6 +39,13 @@ def _patch_make_metavar() -> None:
     if "ctx" not in inspect.signature(click.core.Parameter.make_metavar).parameters:
         return
 
+    def _type_get_metavar(param: Any, ctx: Optional[click.Context]) -> Optional[str]:
+        if ctx is None:
+            ctx = click.Context(click.Command(name=""))
+        if "ctx" in inspect.signature(param.type.get_metavar).parameters:
+            return cast(Optional[str], param.type.get_metavar(param, ctx))
+        return cast(Optional[str], param.type.get_metavar(param))
+
     def _wrap_click_make_metavar(method: Callable[..., str]) -> Callable[..., str]:
         def _patched(self: Any, ctx: Optional[click.Context] = None) -> str:
             if ctx is None:
@@ -47,11 +54,40 @@ def _patch_make_metavar() -> None:
 
         return _patched
 
+    def _typer_option_make_metavar(
+        self: Any, ctx: Optional[click.Context] = None
+    ) -> str:
+        if self.metavar is not None:
+            return cast(str, self.metavar)
+
+        metavar = _type_get_metavar(self, ctx)
+
+        if metavar is None:
+            metavar = self.type.name.upper()
+
+        if self.nargs != 1:
+            metavar += "..."
+
+        return metavar
+
+    def _typer_argument_make_metavar(
+        self: Any, ctx: Optional[click.Context] = None
+    ) -> str:
+        if self.metavar is not None:
+            return cast(str, self.metavar)
+        var = (self.name or "").upper()
+        if not self.required:
+            var = f"[{var}]"
+        type_var = _type_get_metavar(self, ctx)
+        if type_var:
+            var += f":{type_var}"
+        if self.nargs != 1:
+            var += "..."
+        return var
+
     def _wrap_typer_make_metavar(method: Callable[..., str]) -> Callable[..., str]:
-        def _patched(  # pylint: disable=unused-argument
-            self: Any, ctx: Optional[click.Context] = None
-        ) -> str:
-            return method(self)
+        def _patched(self: Any, ctx: Optional[click.Context] = None) -> str:
+            return method(self, ctx)
 
         return _patched
 
@@ -74,12 +110,12 @@ def _patch_make_metavar() -> None:
     setattr(
         typer.core.TyperOption,
         make_metavar,
-        _wrap_typer_make_metavar(typer.core.TyperOption.make_metavar),
+        _wrap_typer_make_metavar(_typer_option_make_metavar),
     )
     setattr(
         typer.core.TyperArgument,
         make_metavar,
-        _wrap_typer_make_metavar(typer.core.TyperArgument.make_metavar),
+        _wrap_typer_make_metavar(_typer_argument_make_metavar),
     )
 
 
@@ -105,26 +141,21 @@ app.command()(stop)
 app.command()(login)
 
 
-def _version_callback(value: bool) -> None:
-    """Print version and exit."""
-    if value:
-        typer.secho(f"Flower version: {package_version}", fg="blue")
-        raise typer.Exit()
-
-
 @app.callback(invoke_without_command=True)
 def version_callback(
-    _: Annotated[
-        Optional[bool],
+    version: Annotated[
+        bool,
         typer.Option(
             "--version",
-            callback=_version_callback,
             is_eager=True,
             help="Show the version and exit.",
         ),
-    ] = None,
+    ] = False,
 ) -> None:
     """Flower command line interface."""
+    if version:
+        typer.secho(f"Flower version: {package_version}", fg="blue")
+        raise typer.Exit()
 
 
 typer_click_object = get_command(app)
