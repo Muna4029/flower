@@ -14,7 +14,6 @@
 # ==============================================================================
 """Unit tests for ArrayRecord."""
 
-
 import sys
 import unittest
 from collections import OrderedDict
@@ -339,9 +338,7 @@ class TestArrayRecord(unittest.TestCase):
 )
 def test_count_bytes(shape: list[int], dtype: str) -> None:
     """Test bytes in a ArrayRecord are computed correctly."""
-    original_array: NDArray = np.asarray(
-        np.random.randn(*shape), dtype=np.dtype(dtype)
-    )
+    original_array: NDArray = np.asarray(np.random.randn(*shape), dtype=np.dtype(dtype))
 
     buff = ndarray_to_bytes(original_array)
 
