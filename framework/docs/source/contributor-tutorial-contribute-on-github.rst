@@ -280,8 +280,8 @@ And with Flower's repository:
  Example of first contribution
 *******************************
 
-Problem
-~~~~~~~
+The problem
+===========
 
 For our documentation, we've started to use the `Diàtaxis framework
 <https://diataxis.fr/>`_.
@@ -303,7 +303,7 @@ Before: "How to saving progress" ❌
 After: "How to save progress" ✅
 
 Solution
-~~~~~~~~
+========
 
 This is a tiny change, but it'll allow us to test your end-to-end setup. After cloning
 and setting up the Flower repo, here's what you should do:
@@ -365,7 +365,7 @@ following :
 .. _pr_title_format:
 
 PR title format
-~~~~~~~~~~~~~~~
+===============
 
 We enforce the following PR title format:
 

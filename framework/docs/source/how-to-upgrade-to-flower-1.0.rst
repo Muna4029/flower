@@ -45,8 +45,8 @@ Here's how to update an existing installation to Flower 1.0 using either pip or 
 
 The following breaking changes require manual updates.
 
-General
-~~~~~~~
+General changes
+===============
 
 Pass all arguments as keyword arguments (not as positional arguments). Here's an
 example:
@@ -56,7 +56,7 @@ example:
   client=FlowerClient())``
 
 Client
-~~~~~~
+======
 
 - Subclasses of ``NumPyClient``: change ``def get_parameters(self):``` to ``def
   get_parameters(self, config):``
@@ -64,7 +64,7 @@ Client
   get_parameters(self, ins: GetParametersIns):``
 
 Strategies / ``start_server`` / ``start_simulation``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+====================================================
 
 - Pass ``ServerConfig`` (instead of a dictionary) to ``start_server`` and
   ``start_simulation``. Here's an example:
@@ -107,7 +107,7 @@ Strategies / ``start_server`` / ``start_simulation``
     Dict[str, Scalar]) -> Optional[Tuple[float, Dict[str, Scalar]]]:``
 
 Custom strategies
-~~~~~~~~~~~~~~~~~
+=================
 
 - The type of parameter ``failures`` has changed from ``List[BaseException]`` to
   ``List[Union[Tuple[ClientProxy, FitRes], BaseException]]`` (in ``aggregate_fit``) and
