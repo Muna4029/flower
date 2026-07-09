@@ -14,7 +14,12 @@
 # ==============================================================================
 """Flower command line interface."""
 
+import inspect
+from typing import Any, Callable, Optional
+
+import click
 import typer
+import typer.core
 from typer.main import get_command
 
 from flwr.common.version import package_version
@@ -27,6 +32,45 @@ from .ls import ls
 from .new import new
 from .run import run
 from .stop import stop
+
+
+def _patch_make_metavar() -> None:
+    """Patch Typer/Click metavar handling across Click versions."""
+    if "ctx" not in inspect.signature(click.core.Parameter.make_metavar).parameters:
+        return
+
+    def _wrap_click_make_metavar(method: Callable[..., str]) -> Callable[..., str]:
+        def _patched(self: Any, ctx: Optional[click.Context] = None) -> str:
+            if ctx is None:
+                ctx = click.Context(click.Command(name=""))
+            return method(self, ctx)
+
+        return _patched
+
+    def _wrap_typer_make_metavar(method: Callable[..., str]) -> Callable[..., str]:
+        def _patched(self: Any, ctx: Optional[click.Context] = None) -> str:
+            return method(self)
+
+        return _patched
+
+    click.core.Parameter.make_metavar = _wrap_click_make_metavar(
+        click.core.Parameter.make_metavar
+    )
+    click.core.Option.make_metavar = _wrap_click_make_metavar(
+        click.core.Option.make_metavar
+    )
+    click.core.Argument.make_metavar = _wrap_click_make_metavar(
+        click.core.Argument.make_metavar
+    )
+    typer.core.TyperOption.make_metavar = _wrap_typer_make_metavar(
+        typer.core.TyperOption.make_metavar
+    )
+    typer.core.TyperArgument.make_metavar = _wrap_typer_make_metavar(
+        typer.core.TyperArgument.make_metavar
+    )
+
+
+_patch_make_metavar()
 
 app = typer.Typer(
     help=typer.style(
@@ -47,8 +91,6 @@ app.command()(ls)
 app.command()(stop)
 app.command()(login)
 
-typer_click_object = get_command(app)
-
 
 @app.callback(invoke_without_command=True)
 def version_callback(
@@ -63,6 +105,9 @@ def version_callback(
     if ver:
         typer.secho(f"Flower version: {package_version}", fg="blue")
         raise typer.Exit()
+
+
+typer_click_object = get_command(app)
 
 
 if __name__ == "__main__":
