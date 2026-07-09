@@ -32,6 +32,8 @@ from .typeddict import TypedDict
 
 if TYPE_CHECKING:
     from torch import Tensor
+else:
+    Tensor = Any
 
 
 def _raise_array_record_init_error() -> None:
