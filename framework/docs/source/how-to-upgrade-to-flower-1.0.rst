@@ -2,8 +2,9 @@
 .. meta::
     :description: Upgrade seamlessly from Flower 0.x to Flower 1.0 with this guide.
 
-Upgrade to Flower 1.0
-=====================
+#######################
+ Upgrade to Flower 1.0
+#######################
 
 .. note::
 
@@ -19,8 +20,9 @@ future growth. Compared to Flower 0.19 (and other 0.x series releases), there ar
 breaking changes that make it necessary to change the code of existing 0.x-series
 projects.
 
-Install update
---------------
+****************
+ Install update
+****************
 
 Here's how to update an existing installation to Flower 1.0 using either pip or Poetry:
 
@@ -37,8 +39,9 @@ Here's how to update an existing installation to Flower 1.0 using either pip or 
   - ``flwr = { version = "^1.0.0", extras = ["simulation"] }`` (when using
     ``start_simulation``)
 
-Required changes
-----------------
+******************
+ Required changes
+******************
 
 The following breaking changes require manual updates.
 
@@ -118,8 +121,9 @@ Custom strategies
   - Flower 1.0: ``def evaluate(self, server_round: int, parameters: Parameters) ->
     Optional[Tuple[float, Dict[str, Scalar]]]:``
 
-Optional improvements
----------------------
+***********************
+ Optional improvements
+***********************
 
 Along with the necessary changes above, there are a number of potential improvements
 that just became possible:
@@ -130,8 +134,9 @@ that just became possible:
 - Configure the round timeout via ``start_simulation``: ``start_simulation(...,
   config=flwr.server.ServerConfig(num_rounds=3, round_timeout=600.0), ...)``
 
-Further help
-------------
+**************
+ Further help
+**************
 
 Most official `Flower code examples
 <https://github.com/adap/flower/tree/main/examples>`_ are already updated to Flower 1.0,

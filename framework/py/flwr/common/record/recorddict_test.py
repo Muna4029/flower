@@ -18,7 +18,7 @@ import json
 import pickle
 from collections import OrderedDict
 from copy import deepcopy
-from typing import Callable, Union, cast
+from typing import Any, Callable, Union, cast
 from unittest.mock import Mock, PropertyMock, patch
 
 import numpy as np
@@ -71,7 +71,9 @@ def test_ndarray_to_array() -> None:
 
     arr_ = cast(
         NDArray,
-        np.frombuffer(buffer=array.data, dtype=array.dtype).reshape(array.shape),
+        cast(Any, np.frombuffer(buffer=array.data, dtype=array.dtype)).reshape(
+            array.shape
+        ),
     )
 
     assert np.array_equal(arr, arr_)
