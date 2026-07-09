@@ -14,7 +14,6 @@
 # ==============================================================================
 """Unit tests for conversion utility functions."""
 
-
 import unittest
 from io import BytesIO
 

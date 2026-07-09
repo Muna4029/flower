@@ -17,9 +17,8 @@
 Paper: openreview.net/pdf?id=ByexElSYDr
 """
 
-
 from logging import WARNING
-from typing import Callable, Optional, Union
+from typing import Any, Callable, Optional, Union
 
 import numpy as np
 
@@ -178,7 +177,7 @@ class QFedAvg(FedAvg):
                     client_grads, grad_list[i]
                 )  # output a flattened array
             squared = np.square(client_grads)
-            summed = np.sum(squared)
+            summed: np.number[Any] = np.sum(squared)
             return float(summed)
 
         deltas = []

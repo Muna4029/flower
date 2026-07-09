@@ -13,6 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 """Aggregation functions for strategy implementations."""
+
 # mypy: disallow_untyped_calls=False
 
 from functools import partial, reduce
@@ -53,14 +54,17 @@ def aggregate_inplace(results: list[tuple[ClientProxy, FitRes]]) -> NDArrays:
     ]
 
     def _try_inplace(
-        x: NDArray, y: Union[NDArray, np.float64], np_binary_op: np.ufunc
+        x: NDArray, y: Union[NDArray, float, np.float64], np_binary_op: np.ufunc
     ) -> NDArray:
         y_arr = np.asarray(y)
+        y_dtype = y_arr.dtype
         return cast(
             NDArray,
-            np_binary_op(x, y_arr, out=x)
-            if np.can_cast(y_arr, x.dtype, casting="same_kind")
-            else np_binary_op(x, np.array(y_arr, x.dtype), out=x),
+            (
+                np_binary_op(x, y_arr, out=x)
+                if np.can_cast(y_dtype, x.dtype, casting="same_kind")
+                else np_binary_op(x, np.array(y_arr, x.dtype), out=x)
+            ),
         )
 
     # Let's do in-place aggregation

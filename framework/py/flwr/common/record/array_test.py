@@ -14,7 +14,6 @@
 # ==============================================================================
 """Unit tests for Array."""
 
-
 import sys
 import unittest
 from io import BytesIO
