@@ -105,21 +105,26 @@ app.command()(stop)
 app.command()(login)
 
 
+def _version_callback(value: bool) -> None:
+    """Print version and exit."""
+    if value:
+        typer.secho(f"Flower version: {package_version}", fg="blue")
+        raise typer.Exit()
+
+
 @app.callback(invoke_without_command=True)
 def version_callback(
-    ver: Annotated[
-        bool,
+    _: Annotated[
+        Optional[bool],
         typer.Option(
             "--version",
+            callback=_version_callback,
             is_eager=True,
             help="Show the version and exit.",
         ),
-    ] = False,
+    ] = None,
 ) -> None:
-    """Print version."""
-    if ver:
-        typer.secho(f"Flower version: {package_version}", fg="blue")
-        raise typer.Exit()
+    """Flower command line interface."""
 
 
 typer_click_object = get_command(app)
