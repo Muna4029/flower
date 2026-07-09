@@ -28,7 +28,8 @@ def _stochastic_round(arr: NDArrayFloat) -> NDArrayInt:
         if float(cast(Any, rand_arr)) < float(cast(Any, ret - arr)):
             ret -= 1
     else:
-        ret[cast(Any, rand_arr < ret - arr)] -= 1
+        mask = cast(Any, rand_arr) < cast(Any, ret - arr)
+        ret[mask] -= 1
     return ret
 
 
