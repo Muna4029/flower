@@ -15,7 +15,7 @@
 """Flower command line interface."""
 
 import inspect
-from typing import Any, Callable, Optional
+from typing import Annotated, Any, Callable, Optional
 
 import click
 import typer
@@ -107,12 +107,14 @@ app.command()(login)
 
 @app.callback(invoke_without_command=True)
 def version_callback(
-    ver: bool = typer.Option(
-        False,
-        "--version",
-        is_eager=True,
-        help="Show the version and exit.",
-    ),
+    ver: Annotated[
+        bool,
+        typer.Option(
+            "--version",
+            is_eager=True,
+            help="Show the version and exit.",
+        ),
+    ] = False,
 ) -> None:
     """Print version."""
     if ver:
