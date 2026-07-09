@@ -25,7 +25,6 @@ from typing import Annotated, Any, Optional, Union
 import pathspec
 import tomli_w
 import typer
-from pathspec.pattern import Pattern
 
 from flwr.common.constant import FAB_ALLOWED_EXTENSIONS, FAB_DATE, FAB_HASH_TRUNCATION
 
@@ -173,7 +172,7 @@ def build(
     return fab_filename, fab_hash
 
 
-def _load_gitignore(app: Path) -> pathspec.PathSpec[Pattern]:
+def _load_gitignore(app: Path) -> Any:
     """Load and parse .gitignore file, returning a pathspec."""
     gitignore_path = app / ".gitignore"
     patterns = ["__pycache__/"]  # Default pattern

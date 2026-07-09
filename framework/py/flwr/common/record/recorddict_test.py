@@ -17,7 +17,7 @@
 import pickle
 from collections import OrderedDict
 from copy import deepcopy
-from typing import Callable, Union, cast
+from typing import Any, Callable, Union, cast
 from unittest.mock import Mock, PropertyMock, patch
 
 import numpy as np
@@ -60,11 +60,16 @@ def ndarray_to_array(ndarray: NDArray) -> Array:
 def test_ndarray_to_array() -> None:
     """Test creation of Array object from NumPy ndarray."""
     shape = (2, 7, 9)
-    arr: NDArray = np.eye(*shape)
+    arr = cast(NDArray, np.eye(*shape))
 
     array = ndarray_to_array(arr)
 
-    arr_ = np.frombuffer(buffer=array.data, dtype=array.dtype).reshape(array.shape)
+    arr_ = cast(
+        NDArray,
+        cast(Any, np.frombuffer(buffer=array.data, dtype=array.dtype)).reshape(
+            array.shape
+        ),
+    )
 
     assert np.array_equal(arr, arr_)
 
