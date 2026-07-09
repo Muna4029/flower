@@ -48,7 +48,9 @@ def _patch_make_metavar() -> None:
         return _patched
 
     def _wrap_typer_make_metavar(method: Callable[..., str]) -> Callable[..., str]:
-        def _patched(self: Any, ctx: Optional[click.Context] = None) -> str:
+        def _patched(  # pylint: disable=unused-argument
+            self: Any, ctx: Optional[click.Context] = None
+        ) -> str:
             return method(self)
 
         return _patched
