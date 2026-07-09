@@ -15,7 +15,7 @@
 """Flower command line interface."""
 
 import inspect
-from typing import Annotated, Any, Callable, Optional, cast
+from typing import Any, Callable, Optional, cast
 
 import click
 import typer
@@ -141,27 +141,20 @@ app.command()(stop)
 app.command()(login)
 
 
-def _version_callback(value: bool) -> None:
-    """Print version and exit."""
-    if value:
-        typer.secho(f"Flower version: {package_version}", fg="blue")
-        raise typer.Exit()
-
-
 @app.callback(invoke_without_command=True)
 def version_callback(
-    _: Annotated[
-        Optional[bool],
-        typer.Option(
-            "--version",
-            callback=_version_callback,
-            is_eager=True,
-            is_flag=True,
-            help="Show the version and exit.",
-        ),
-    ] = None,
+    version: bool = typer.Option(
+        False,
+        "--version",
+        is_eager=True,
+        is_flag=True,
+        help="Show the version and exit.",
+    ),
 ) -> None:
     """Flower command line interface."""
+    if version:
+        typer.secho(f"Flower version: {package_version}", fg="blue")
+        raise typer.Exit()
 
 
 typer_click_object = get_command(app)
