@@ -14,7 +14,6 @@
 # ==============================================================================
 """Flower command line interface `build` command."""
 
-
 import hashlib
 import zipfile
 from io import BytesIO
@@ -198,7 +197,7 @@ def build_fab(app: Path) -> tuple[bytes, str, dict[str, Any]]:
     return fab_bytes, fab_hash, config
 
 
-def _load_gitignore(app: Path) -> pathspec.PathSpec:
+def _load_gitignore(app: Path) -> Any:
     """Load and parse .gitignore file, returning a pathspec."""
     gitignore_path = app / ".gitignore"
     patterns = ["__pycache__/"]  # Default pattern
