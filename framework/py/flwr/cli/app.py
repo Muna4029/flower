@@ -53,20 +53,31 @@ def _patch_make_metavar() -> None:
 
         return _patched
 
-    click.core.Parameter.make_metavar = _wrap_click_make_metavar(
-        click.core.Parameter.make_metavar
+    make_metavar = "make_metavar"
+    setattr(
+        click.core.Parameter,
+        make_metavar,
+        _wrap_click_make_metavar(click.core.Parameter.make_metavar),
     )
-    click.core.Option.make_metavar = _wrap_click_make_metavar(
-        click.core.Option.make_metavar
+    setattr(
+        click.core.Option,
+        make_metavar,
+        _wrap_click_make_metavar(click.core.Option.make_metavar),
     )
-    click.core.Argument.make_metavar = _wrap_click_make_metavar(
-        click.core.Argument.make_metavar
+    setattr(
+        click.core.Argument,
+        make_metavar,
+        _wrap_click_make_metavar(click.core.Argument.make_metavar),
     )
-    typer.core.TyperOption.make_metavar = _wrap_typer_make_metavar(
-        typer.core.TyperOption.make_metavar
+    setattr(
+        typer.core.TyperOption,
+        make_metavar,
+        _wrap_typer_make_metavar(typer.core.TyperOption.make_metavar),
     )
-    typer.core.TyperArgument.make_metavar = _wrap_typer_make_metavar(
-        typer.core.TyperArgument.make_metavar
+    setattr(
+        typer.core.TyperArgument,
+        make_metavar,
+        _wrap_typer_make_metavar(typer.core.TyperArgument.make_metavar),
     )
 
 
