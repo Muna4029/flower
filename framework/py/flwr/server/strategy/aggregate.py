@@ -56,11 +56,10 @@ def aggregate_inplace(results: list[tuple[ClientProxy, FitRes]]) -> NDArrays:
     def _try_inplace(
         x: NDArray, y: Union[NDArray, float, np.float64], np_binary_op: np.ufunc
     ) -> NDArray:
-        return (  # type: ignore[no-any-return]
-            np_binary_op(x, y, out=x)
-            if np.can_cast(y, x.dtype, casting="same_kind")
-            else np_binary_op(x, np.array(y, x.dtype), out=x)
-        )
+        y_dtype = np.asarray(y).dtype
+        if np.can_cast(y_dtype, x.dtype, casting="same_kind"):
+            return cast(NDArray, np_binary_op(x, y, out=x))
+        return cast(NDArray, np_binary_op(x, np.array(y, x.dtype), out=x))
 
     # Let's do in-place aggregation
     # Get first result, then add up each other
@@ -117,16 +116,14 @@ def aggregate_krum(
 
     # Compute the score for each client, that is the sum of the distances
     # of the n-f-2 closest parameters vectors
-    scores = [
-        np.sum(distance_matrix[i, closest_indices[i]])
+    scores: list[float] = [
+        float(np.sum(distance_matrix[i, closest_indices[i]]))
         for i in range(len(distance_matrix))
     ]
 
     if to_keep > 0:
         # Choose to_keep clients and return their average (MultiKrum)
-        best_indices = np.argsort(scores)[::-1][
-            len(scores) - to_keep :
-        ].tolist()  # noqa: E203
+        best_indices = sorted(range(len(scores)), key=scores.__getitem__)[:to_keep]
         best_results = [results[i] for i in best_indices]
         return aggregate(best_results)
 
@@ -250,14 +247,14 @@ def _compute_distances(weights: list[NDArrays]) -> NDArray:
     Input: weights - list of weights vectors
     Output: distances - matrix distance_matrix of squared distances between the vectors
     """
-    flat_w: list[Any] = [np.concatenate(p, axis=None).ravel() for p in weights]
-    distance_matrix = np.zeros((len(weights), len(weights)))
+    flat_w: list[Any] = [cast(Any, np.concatenate(p, axis=None)).ravel() for p in weights]
+    distance_matrix: Any = np.zeros((len(weights), len(weights)))
     for i, flat_w_i in enumerate(flat_w):
         for j, flat_w_j in enumerate(flat_w):
             delta = cast(NDArray, cast(Any, flat_w_i) - cast(Any, flat_w_j))
             norm = np.linalg.norm(delta)
             distance_matrix[i, j] = norm**2
-    return distance_matrix
+    return cast(NDArray, distance_matrix)
 
 
 def _trim_mean(array: NDArray, proportiontocut: float) -> NDArray:
@@ -381,8 +378,8 @@ def _aggregate_n_closest_weights(
         indices = np.argpartition(diff_np, kth=beta_closest - 1, axis=0)
         # Take the weights (coordinate-wise) corresponding to the beta of the
         # closest distances
-        beta_closest_weights = np.take_along_axis(
-            other_weights_layer_np, indices=indices, axis=0
+        beta_closest_weights = cast(
+            Any, np.take_along_axis(other_weights_layer_np, indices=indices, axis=0)
         )[:beta_closest]
         aggregated_weights.append(np.mean(beta_closest_weights, axis=0))
     return aggregated_weights

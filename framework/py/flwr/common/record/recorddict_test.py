@@ -65,12 +65,13 @@ def ndarray_to_array(ndarray: NDArray) -> Array:
 def test_ndarray_to_array() -> None:
     """Test creation of Array object from NumPy ndarray."""
     shape = (2, 7, 9)
-    arr = np.eye(*shape)
+    arr = cast(NDArray, np.eye(*shape))
 
     array = ndarray_to_array(arr)
 
-    arr_: NDArray = np.frombuffer(buffer=array.data, dtype=array.dtype).reshape(
-        array.shape
+    arr_ = cast(
+        NDArray,
+        np.frombuffer(buffer=array.data, dtype=array.dtype).reshape(array.shape),
     )
 
     assert np.array_equal(arr, arr_)
