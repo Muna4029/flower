@@ -20,11 +20,10 @@ from enum import Enum
 from typing import Any, Callable, Optional, Union
 
 import numpy as np
-import numpy.typing as npt
 
-NDArray = npt.NDArray[Any]
-NDArrayInt = npt.NDArray[np.int_]
-NDArrayFloat = npt.NDArray[np.float64]
+NDArray = np.ndarray[Any, np.dtype[Any]]
+NDArrayInt = np.ndarray[Any, np.dtype[np.int_]]
+NDArrayFloat = np.ndarray[Any, np.dtype[np.float64]]
 NDArrays = list[NDArray]
 
 # The following union type contains Python types corresponding to ProtoBuf types that
