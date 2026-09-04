@@ -43,6 +43,7 @@ from flwr.common.serde import (
     context_from_proto,
     context_to_proto,
     fab_from_proto,
+    message_from_proto,
     message_to_proto,
     run_from_proto,
 )
@@ -65,6 +66,7 @@ from flwr.proto.clientappio_pb2 import (
     RequestTokenResponse,
 )
 from flwr.proto.clientappio_pb2_grpc import ClientAppIoStub
+from flwr.proto.message_pb2 import ObjectTree  # pylint: disable=E0611
 from flwr.proto.node_pb2 import Node  # pylint: disable=E0611
 from flwr.supercore.utils import mask_string
 
@@ -223,19 +225,25 @@ def pull_clientappinputs(
         )
         run_id = context.run_id
         node = Node(node_id=context.node_id)
-        object_tree = pull_msg_res.message_object_trees[0]
-        message = pull_and_inflate_object_from_tree(
-            object_tree,
-            make_pull_object_fn_protobuf(stub.PullObject, node, run_id),
-            make_confirm_message_received_fn_protobuf(
-                stub.ConfirmMessageReceived, node, run_id
-            ),
-            return_type=Message,
-        )
-
-        # Set the message ID
-        # The deflated message doesn't contain the message_id (its own object_id)
-        message.metadata.__dict__["_message_id"] = object_tree.object_id
+        # Check if message_object_trees is not empty, otherwise use messages_list
+        if pull_msg_res.message_object_trees:
+            object_tree = pull_msg_res.message_object_trees[0]
+            message = pull_and_inflate_object_from_tree(
+                object_tree,
+                make_pull_object_fn_protobuf(stub.PullObject, node, run_id),
+                make_confirm_message_received_fn_protobuf(
+                    stub.ConfirmMessageReceived, node, run_id
+                ),
+                return_type=Message,
+            )
+            # Set the message ID
+            # The deflated message doesn't contain the message_id (its own object_id)
+            message.metadata.__dict__["_message_id"] = object_tree.object_id
+        elif pull_msg_res.messages_list:
+            # Convert Message proto to Message object directly
+            message = message_from_proto(pull_msg_res.messages_list[0])
+        else:
+            raise ValueError("No messages available in PullAppMessagesResponse")
         return message, context, run, fab
     except grpc.RpcError as e:
         log(ERROR, "[PullClientAppInputs] gRPC error occurred: %s", str(e))

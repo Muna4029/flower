@@ -16,7 +16,7 @@
 
 
 from logging import WARNING
-from typing import Optional
+from typing import Any, Optional
 
 import numpy as np
 
@@ -39,8 +39,8 @@ def get_norm(input_arrays: NDArrays) -> float:
 def add_gaussian_noise_inplace(input_arrays: NDArrays, std_dev: float) -> None:
     """Add Gaussian noise to each element of the input arrays."""
     for array in input_arrays:
-        noise = np.random.normal(0, std_dev, array.shape).astype(array.dtype)
-        array += noise
+        noise = np.random.normal(0, std_dev, array.shape)
+        array += np.asarray(noise, dtype=array.dtype)
 
 
 def clip_inputs_inplace(input_arrays: NDArrays, clipping_norm: float) -> None:
