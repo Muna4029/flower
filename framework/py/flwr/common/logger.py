@@ -54,6 +54,28 @@ LOG_COLORS = {
     "RESET": "\033[0m",  # Reset to default
 }
 
+
+def mask_string(value: str, visible_chars: int = 4) -> str:
+    """Mask a string for secure logging by showing only the first and last characters.
+
+    Parameters
+    ----------
+    value : str
+        The string to mask (e.g., a token or password)
+    visible_chars : int
+        Number of characters to show at the start and end of the string
+
+    Returns
+    -------
+    str
+        The masked string (e.g., "abcd...wxyz")
+    """
+    if not value:
+        return value
+    if len(value) <= visible_chars * 2:
+        return value[:visible_chars] + "*" * (len(value) - visible_chars)
+    return value[:visible_chars] + "..." + value[-visible_chars:]
+
 if TYPE_CHECKING:
     StreamHandler = logging.StreamHandler[Any]
 else:
