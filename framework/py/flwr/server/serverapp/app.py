@@ -14,7 +14,6 @@
 # ==============================================================================
 """Flower ServerApp process."""
 
-
 import argparse
 import gc
 from logging import DEBUG, ERROR, INFO
@@ -48,6 +47,7 @@ from flwr.common.logger import (
     stop_log_uploader,
 )
 from flwr.common.serde import (
+    Context,
     context_from_proto,
     context_to_proto,
     fab_from_proto,
@@ -84,8 +84,7 @@ def flwr_serverapp() -> None:
 
     log(
         DEBUG,
-        "`flwr-serverapp` will attempt to connect to SuperLink's "
-        "ServerAppIo API at %s",
+        "`flwr-serverapp` will attempt to connect to SuperLink's ServerAppIo API at %s",
         args.serverappio_api_address,
     )
     run_serverapp(
@@ -117,7 +116,6 @@ def run_serverapp(  # pylint: disable=R0914, disable=W0212, disable=R0915
     heartbeat_sender = None
     grid = None
     while True:
-
         try:
             # Initialize the GrpcGrid
             grid = GrpcGrid(
@@ -134,7 +132,8 @@ def run_serverapp(  # pylint: disable=R0914, disable=W0212, disable=R0915
                 run_status = None
                 continue
 
-            context = context_from_proto(res.context)
+            context: Context | None = context_from_proto(res.context)
+            assert context is not None
             run = run_from_proto(res.run)
             fab = fab_from_proto(res.fab)
 
