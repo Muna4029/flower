@@ -16,7 +16,7 @@
 # mypy: disallow_untyped_calls=False
 
 from functools import partial, reduce
-from typing import Any, Callable, Union
+from typing import Any, Callable, Union, cast
 
 import numpy as np
 
@@ -247,8 +247,10 @@ def _compute_distances(weights: list[NDArrays]) -> NDArray:
     """
     flat_w = np.array([np.concatenate(p, axis=None).ravel() for p in weights])
     distance_matrix = np.zeros((len(weights), len(weights)))
-    for i, flat_w_i in enumerate(flat_w):
-        for j, flat_w_j in enumerate(flat_w):
+    for i in range(len(flat_w)):
+        flat_w_i: NDArray = flat_w[i]
+        for j in range(len(flat_w)):
+            flat_w_j: NDArray = flat_w[j]
             delta = flat_w_i - flat_w_j
             norm = np.linalg.norm(delta)
             distance_matrix[i, j] = norm**2
