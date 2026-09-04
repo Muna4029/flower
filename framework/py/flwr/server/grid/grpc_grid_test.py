@@ -24,7 +24,7 @@ import grpc
 from flwr.app.error import Error
 from flwr.common import RecordDict
 from flwr.common.constant import SUPERLINK_NODE_ID
-from flwr.common.inflatable import get_all_nested_objects
+from flwr.common.inflatable import get_all_nested_objects, get_object_tree
 from flwr.common.message import Message
 from flwr.common.serde import message_to_proto
 from flwr.proto.appio_pb2 import (  # pylint: disable=E0611
@@ -220,7 +220,7 @@ class TestGrpcGrid(unittest.TestCase):
         reply.metadata.__dict__["_message_id"] = reply.object_id
         self.mock_stub.PullMessages.return_value = Mock(
             messages_list=[message_to_proto(reply)],
-            get_object_tree(reply),
+            message_object_trees=[get_object_tree(reply)],
         )
         self.mock_stub.PullObject.return_value = Mock(
             object_found=True, object_available=True, object_content=reply.deflate()
