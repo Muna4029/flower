@@ -22,9 +22,9 @@ from typing import Any, Callable, Optional, Union
 import numpy as np
 import numpy.typing as npt
 
-NDArray = npt.NDArray[Any]
-NDArrayInt = npt.NDArray[np.int_]
-NDArrayFloat = npt.NDArray[np.float64]
+NDArray = np.ndarray[Any, Any]
+NDArrayInt = np.ndarray[Any, Any]
+NDArrayFloat = np.ndarray[Any, Any]
 NDArrays = list[NDArray]
 
 # The following union type contains Python types corresponding to ProtoBuf types that
