@@ -110,17 +110,20 @@ class Message(InflatableObject):
         *,
         ttl: float | None = None,
         group_id: str | None = None,
-    ) -> None: ...
+    ) -> None:
+        ...
 
     @overload
     def __init__(  # noqa: E704
         self, content: RecordDict, *, reply_to: Message, ttl: float | None = None
-    ) -> None: ...
+    ) -> None:
+        ...
 
     @overload
     def __init__(  # noqa: E704
         self, error: Error, *, reply_to: Message, ttl: float | None = None
-    ) -> None: ...
+    ) -> None:
+        ...
 
     def __init__(  # pylint: disable=too-many-arguments
         self,
