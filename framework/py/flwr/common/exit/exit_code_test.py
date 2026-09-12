@@ -46,8 +46,9 @@ def test_exit_code_help_url_exist() -> None:
 
         # Retrieve the title from the help URL
         f = files[code]
-        title = f.read_text().split("\n")[0]
+        title = f.read_text().split("\n")[0].strip()
 
+        assert title, f"Exit code {name} ({code}) help URL has empty title in {str(f)}"
         # Assert the title is correct
         assert (
             title == f"[{code}] {name}"
