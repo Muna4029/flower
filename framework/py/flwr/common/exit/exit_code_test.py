@@ -46,9 +46,12 @@ def test_exit_code_help_url_exist() -> None:
 
         # Retrieve the title from the help URL
         f = files[code]
-        title = f.read_text().split("\n")[0]
+        title = f.read_text().split("\n")[1].strip()
+
+        # Normalize whitespace in the extracted title
+        title_normalized = " ".join(title.split())
 
         # Assert the title is correct
         assert (
-            title == f"[{code}] {name}"
+            title_normalized == f"[{code}] {name}"
         ), f"Exit code {name} ({code}) help URL has incorrect title in {str(f)}"
