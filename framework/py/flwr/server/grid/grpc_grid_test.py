@@ -220,7 +220,7 @@ class TestGrpcGrid(unittest.TestCase):
         reply.metadata.__dict__["_message_id"] = reply.object_id
         self.mock_stub.PullMessages.return_value = Mock(
             messages_list=[message_to_proto(reply)],
-            get_object_tree(reply),
+            message_object_trees=[get_object_tree(reply)],
         )
         self.mock_stub.PullObject.return_value = Mock(
             object_found=True, object_available=True, object_content=reply.deflate()
