@@ -250,7 +250,6 @@ def run_serverapp(  # pylint: disable=R0914, disable=W0212, disable=R0915
                 grid.close()
 
             # Clean up the Context
-            context = None
             gc.collect()
 
             event(
