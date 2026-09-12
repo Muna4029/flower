@@ -14,7 +14,6 @@
 # ==============================================================================
 """Tests for exit codes."""
 
-
 from pathlib import Path
 
 from .exit_code import EXIT_CODE_HELP, ExitCode
@@ -25,9 +24,9 @@ def test_exit_code_help_exist() -> None:
     for name, code in ExitCode.__dict__.items():
         if name.startswith("__"):
             continue
-        assert (
-            code in EXIT_CODE_HELP
-        ), f"Exit code {name} ({code}) does not have help message."
+        assert code in EXIT_CODE_HELP, (
+            f"Exit code {name} ({code}) does not have help message."
+        )
 
 
 def test_exit_code_help_url_exist() -> None:
@@ -46,9 +45,9 @@ def test_exit_code_help_url_exist() -> None:
 
         # Retrieve the title from the help URL
         f = files[code]
-        title = f.read_text().split("\n")[0]
+        title = f.read_text().split("\n")[1].strip()
 
         # Assert the title is correct
-        assert (
-            title == f"[{code}] {name}"
-        ), f"Exit code {name} ({code}) help URL has incorrect title in {str(f)}"
+        assert title == f"[{code}] {name}", (
+            f"Exit code {name} ({code}) help URL has incorrect title in {str(f)}"
+        )
