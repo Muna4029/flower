@@ -23,13 +23,13 @@ from flwr.common.typing import NDArrayFloat, NDArrayInt
 
 
 def _stochastic_round(arr: NDArrayFloat) -> NDArrayInt:
-    ret: NDArrayInt = np.ceil(arr).astype(np.int32)
+    ret: NDArrayInt = np.asarray(np.ceil(arr), dtype=np.int32)
     rand_arr = np.random.rand(*ret.shape)
     if len(ret.shape) == 0:
-        if rand_arr < ret - arr:
+        if rand_arr < ret - arr:  # type: ignore[operator]
             ret -= 1
     else:
-        ret[rand_arr < ret - arr] -= 1
+        ret[rand_arr < ret - arr] -= 1  # type: ignore[operator]
     return ret
 
 
@@ -62,7 +62,7 @@ def dequantize(
     quantizer = (2 * clipping_range) / target_range
     shift = -clipping_range
     for arr in quantized_parameters:
-        recon_arr = arr.view(np.ndarray).astype(float)
+        recon_arr = np.asarray(arr.view(np.ndarray), dtype=float)
         recon_arr = cast(NDArrayFloat, recon_arr * quantizer + shift)
         reverse_quantized_list.append(recon_arr)
     return reverse_quantized_list
