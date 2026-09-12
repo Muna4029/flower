@@ -12,6 +12,7 @@ packages = [{ include = "devtool", from = "./" }]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+click = ">=8.0,<8.2"
 clang-format = "==17.0.6"
 isort = "==5.13.2"
 black = { version = "==24.2.0" }
@@ -35,7 +36,7 @@ sphinx-argparse = "==0.4.0"
 mdformat = "==0.7.18"
 mdformat-gfm = "==0.3.6"
 mdformat-frontmatter = "==2.0.1"
-mdformat-beautysh = "==0.1.1"
+mdformat-beautysh = "==1.0.0"
 GitPython = "==3.1.32"
 sphinx-substitution-extensions = "2022.02.16"
 sphinxext-opengraph = "==0.9.1"

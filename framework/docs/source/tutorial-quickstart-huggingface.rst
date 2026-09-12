@@ -1,11 +1,14 @@
-:og:description: Learn how to train a large language model on the IMDB dataset using federated learning with Flower and 🤗 Hugging Face in this step-by-step tutorial.
+:og:description: Learn how to train a large language model on the IMDB dataset using
+    federated learning with Flower and 🤗 Hugging Face in this step-by-step tutorial.
+
 .. meta::
     :description: Learn how to train a large language model on the IMDB dataset using federated learning with Flower and 🤗 Hugging Face in this step-by-step tutorial.
 
 .. _quickstart-huggingface:
 
-Quickstart 🤗 Transformers
-==========================
+############################
+ Quickstart 🤗 Transformers
+############################
 
 In this federated learning tutorial we will learn how to train a large language model
 (LLM) on the `IMDB <https://huggingface.co/datasets/stanfordnlp/imdb>`_ dataset using
@@ -124,8 +127,9 @@ in ``pyproject.toml`` like this:
 What follows is an explanation of each component in the project you just created:
 dataset partition, the model, defining the ``ClientApp`` and defining the ``ServerApp``.
 
-The Data
---------
+**********
+ The Data
+**********
 
 This tutorial uses |flowerdatasets|_ to easily download and partition the `IMDB
 <https://huggingface.co/datasets/stanfordnlp/imdb>`_ dataset. In this example you'll
@@ -171,8 +175,9 @@ to create dataloaders with the data that correspond to their data partition.
         partition_train_test["test"], batch_size=32, collate_fn=data_collator
     )
 
-The Model
----------
+***********
+ The Model
+***********
 
 We will leverage 🤗 Hugging Face to federate the training of language models over
 multiple clients using Flower. More specifically, we will fine-tune a pre-trained
@@ -228,8 +233,9 @@ use standard training/testing functions to perform local training or evaluation:
         accuracy = metric.compute()["accuracy"]
         return loss, accuracy
 
-The ClientApp
--------------
+***************
+ The ClientApp
+***************
 
 The main changes we have to make to use 🤗 Hugging Face with Flower will be found in the
 ``get_weights()`` and ``set_weights()`` functions. Under the hood, the ``transformers``
@@ -316,8 +322,9 @@ additional hyperparameters in ``pyproject.toml`` and access them here.
     # Flower ClientApp
     app = ClientApp(client_fn)
 
-The ServerApp
--------------
+***************
+ The ServerApp
+***************
 
 To construct a ``ServerApp`` we define a ``server_fn()`` callback with an identical
 signature to that of ``client_fn()`` but the return type is |serverappcomponents|_ as
