@@ -198,3 +198,8 @@ pyrightconfig.json
 
 # ruff Python linter
 .ruff_cache/
+# Shell redirection artifacts
+=[0-9]*
+>[0-9]*
+*.tmp
+*.log
