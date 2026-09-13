@@ -425,3 +425,28 @@ def print_json_error(msg: str, e: Union[typer.Exit, Exception]) -> None:
             }
         )
     )
+
+
+def mask_string(input_string: str, show_first: int = 2, show_last: int = 2) -> str:
+    """Mask a string by replacing middle characters with asterisks.
+
+    Parameters
+    ----------
+    input_string : str
+        The string to mask.
+    show_first : int
+        Number of characters to show at the beginning.
+    show_last : int
+        Number of characters to show at the end.
+
+    Returns
+    -------
+    str
+        The masked string.
+    """
+    if not input_string:
+        return input_string
+    mask_len = max(0, len(input_string) - show_first - show_last)
+    if mask_len <= 0:
+        return input_string
+    return input_string[:show_first] + "*" * mask_len + input_string[-show_last:]
