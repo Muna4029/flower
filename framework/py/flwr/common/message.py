@@ -110,17 +110,20 @@ class Message(InflatableObject):
         *,
         ttl: float | None = None,
         group_id: str | None = None,
-    ) -> None: ...
+    ) -> None:
+        ...
 
     @overload
     def __init__(  # noqa: E704
         self, content: RecordDict, *, reply_to: Message, ttl: float | None = None
-    ) -> None: ...
+    ) -> None:
+        ...
 
     @overload
     def __init__(  # noqa: E704
         self, error: Error, *, reply_to: Message, ttl: float | None = None
-    ) -> None: ...
+    ) -> None:
+        ...
 
     def __init__(  # pylint: disable=too-many-arguments
         self,
@@ -402,7 +405,7 @@ class Message(InflatableObject):
             content = None
             error = error_from_proto(proto_message.error)
         else:
-            content = cast(RecordDict, children[children_ids[0]]
+            content = cast(RecordDict, children[children_ids[0]])
             error = None
         # Return message
         return make_message(
