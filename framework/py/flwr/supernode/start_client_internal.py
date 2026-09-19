@@ -14,7 +14,6 @@
 # ==============================================================================
 """Main loop for Flower SuperNode."""
 
-
 import multiprocessing
 import os
 import sys
@@ -31,8 +30,6 @@ import grpc
 from cryptography.hazmat.primitives.asymmetric import ec
 from grpc import RpcError
 
-from flwr.app.error import Error
-from flwr.cli.config_utils import get_fab_metadata
 from flwr.client.grpc_adapter_client.connection import grpc_adapter
 from flwr.client.grpc_rere_client.connection import grpc_request_response
 from flwr.common import GRPC_MAX_MESSAGE_LENGTH, Context, Message, RecordDict
@@ -61,9 +58,8 @@ from flwr.supercore.object_store import ObjectStore, ObjectStoreFactory
 from flwr.supernode.cli.flwr_clientapp import flwr_clientapp
 from flwr.supernode.nodestate import NodeState, NodeStateFactory
 
-DEFAULT_FFS_DIR = get_flwr_dir() / "supernode" / "ffs"
 from flwr.supernode.servicer.clientappio import ClientAppInputs, ClientAppIoServicer
-
+DEFAULT_FFS_DIR = get_flwr_dir() / "supernode" / "ffs"
 
 # pylint: disable=import-outside-toplevel
 # pylint: disable=too-many-branches
@@ -269,7 +265,6 @@ def start_client_internal(
                 )
                 log(INFO, "")
 
-
 def _pull_and_store_message(  # pylint: disable=too-many-positional-arguments
     state: NodeState,
     ffs: Ffs,
@@ -345,7 +340,6 @@ def _pull_and_store_message(  # pylint: disable=too-many-positional-arguments
 
     return run_id
 
-
 @contextmanager
 def _init_connection(  # pylint: disable=too-many-positional-arguments
     transport: str,
@@ -416,7 +410,6 @@ def _init_connection(  # pylint: disable=too-many-positional-arguments
     ) as conn:
         yield conn
 
-
 def _make_fleet_connection_retry_invoker(
     max_retries: Optional[int] = None,
     max_wait_time: Optional[float] = None,
@@ -462,7 +455,6 @@ def _make_fleet_connection_retry_invoker(
         on_backoff=_on_backoff,
     )
 
-
 def _run_flwr_clientapp(args: list[str], main_pid: int) -> None:
     # Monitor the main process in case of SIGKILL
     def main_process_monitor() -> None:
@@ -476,7 +468,6 @@ def _run_flwr_clientapp(args: list[str], main_pid: int) -> None:
     # Run the command
     sys.argv = args
     flwr_clientapp()
-
 
 def run_clientappio_api_grpc(
     address: str,
