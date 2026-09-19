@@ -55,6 +55,7 @@ from flwr.common.serde import (
     run_status_to_proto,
 )
 from flwr.common.telemetry import EventType, event
+from flwr.common.context import Context
 from flwr.common.typing import RunNotRunningException, RunStatus
 from flwr.proto.appio_pb2 import (  # pylint: disable=E0611
     PullAppInputsRequest,
