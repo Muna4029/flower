@@ -298,7 +298,7 @@ def flwr_cli_grpc_exc_handler() -> Iterator[None]:
     try:
         yield
     except grpc.RpcError as e:
-        if e.code() == grpc.StatusCode.UNAUTHENTICATED:
+        if e.code() == grpc.StatusCode.UNAUTHENTICATED:  # pylint: disable=no-member
             typer.secho(
                 "❌ Authentication failed. Please run `flwr login`"
                 " to authenticate and try again.",
@@ -306,20 +306,20 @@ def flwr_cli_grpc_exc_handler() -> Iterator[None]:
                 bold=True,
             )
             raise typer.Exit(code=1) from None
-        if e.code() == grpc.StatusCode.UNIMPLEMENTED:
+        if e.code() == grpc.StatusCode.UNIMPLEMENTED:  # pylint: disable=no-member
             typer.secho(
                 "❌ User authentication is not enabled on this SuperLink.",
                 fg=typer.colors.RED,
                 bold=True,
             )
             raise typer.Exit(code=1) from None
-        if e.code() == grpc.StatusCode.PERMISSION_DENIED:
+        if e.code() == grpc.StatusCode.PERMISSION_DENIED:  # pylint: disable=no-member
             typer.secho(
                 "❌ Authorization failed. Please contact your administrator"
                 " to check your permissions.",
                 fg=typer.colors.RED,
                 bold=True,
             )
-            typer.secho(e.details(), fg=typer.colors.RED, bold=True)
+            typer.secho(e.details(), fg=typer.colors.RED, bold=True)  # pylint: disable=no-member
             raise typer.Exit(code=1) from None
         raise
