@@ -20,11 +20,12 @@ from enum import Enum
 from typing import Any, Callable, Optional, Union
 
 import numpy as np
-import numpy.typing as npt
 
-NDArray = npt.NDArray[Any]
-NDArrayInt = npt.NDArray[np.int_]
-NDArrayFloat = npt.NDArray[np.float64]
+# NumPy 2.x compatible type aliases - using plain np.ndarray without generic parameters
+# This avoids the "type is not generic and not indexable" errors with mypy
+NDArray = np.ndarray
+NDArrayInt = np.ndarray
+NDArrayFloat = np.ndarray
 NDArrays = list[NDArray]
 
 # The following union type contains Python types corresponding to ProtoBuf types that

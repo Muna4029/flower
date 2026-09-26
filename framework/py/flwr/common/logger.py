@@ -45,6 +45,23 @@ FLOWER_LOGGER = logging.getLogger(LOGGER_NAME)
 FLOWER_LOGGER.setLevel(logging.DEBUG)
 log = FLOWER_LOGGER.log  # pylint: disable=invalid-name
 
+def mask_string(value: str, head: int = 4, tail: int = 4) -> str:
+    """Mask a string by preserving only the head and tail characters.
+
+    Mask a string for safe display by preserving the head and tail characters,
+    and replacing the middle with '...'. Useful for logging tokens, secrets,
+    or IDs without exposing sensitive data.
+
+    Notes
+    -----
+    If the string is shorter than the combined length of `head` and `tail`,
+    the original string is returned unchanged.
+    """
+    if len(value) <= head + tail:
+        return value
+    return f"{value[:head]}...{value[-tail:]}"
+
+
 LOG_COLORS = {
     "DEBUG": "\033[94m",  # Blue
     "INFO": "\033[92m",  # Green
