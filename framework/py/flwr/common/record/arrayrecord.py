@@ -14,7 +14,6 @@
 # ==============================================================================
 """ArrayRecord."""
 
-
 from __future__ import annotations
 
 import gc
@@ -35,6 +34,7 @@ from .typeddict import TypedDict
 
 if TYPE_CHECKING:
     import torch
+    from torch import Tensor
 
 
 def _raise_array_record_init_error() -> None:
@@ -142,7 +142,7 @@ class ArrayRecord(TypedDict[str, Array], InflatableObject):
     @overload
     def __init__(  # noqa: E704
         self,
-        torch_state_dict: OrderedDict[str, torch.Tensor],
+        torch_state_dict: OrderedDict[str, Tensor],
         *,
         keep_input: bool = True,
     ) -> None: ...
@@ -151,7 +151,7 @@ class ArrayRecord(TypedDict[str, Array], InflatableObject):
         self,
         *args: Any,
         numpy_ndarrays: list[NDArray] | None = None,
-        torch_state_dict: OrderedDict[str, torch.Tensor] | None = None,
+        torch_state_dict: OrderedDict[str, Tensor] | None = None,
         array_dict: OrderedDict[str, Array] | None = None,
         keep_input: bool = True,
     ) -> None:
@@ -224,15 +224,14 @@ class ArrayRecord(TypedDict[str, Array], InflatableObject):
         # Handle PyTorch state_dict
         if not init_method or init_method == "state_dict":
             # Type check the input
+            torch_module = sys.modules.get("torch")
             if (
-                (torch := sys.modules.get("torch")) is not None
+                torch_module is not None
                 and isinstance(arg, dict)
                 and all(isinstance(k, str) for k in arg.keys())
-                and all(isinstance(v, torch.Tensor) for v in arg.values())
+                and all(isinstance(v, torch_module.Tensor) for v in arg.values())
             ):
-                torch_state_dict = cast(
-                    OrderedDict[str, torch.Tensor], arg  # type: ignore
-                )
+                torch_state_dict = cast(OrderedDict[str, Any], arg)
                 converted = self.from_torch_state_dict(
                     torch_state_dict, keep_input=keep_input
                 )
@@ -274,7 +273,8 @@ class ArrayRecord(TypedDict[str, Array], InflatableObject):
 
             if not keep_input:
                 # Remove the reference
-                ndarrays[i] = None  # type: ignore
+                ndarrays_any = cast(list[Any], ndarrays)
+                ndarrays_any[i] = None
                 total_serialized_bytes += len(record[str(i)].data)
 
                 # If total serialized data exceeds the threshold, trigger GC
