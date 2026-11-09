@@ -18,7 +18,7 @@
 import random
 from dataclasses import dataclass, field
 from logging import DEBUG, ERROR, INFO, WARN
-from typing import Optional, Union, cast
+from typing import Optional, cast
 
 import flwr.common.recorddict_compat as compat
 from flwr.common import (
@@ -112,14 +112,14 @@ class SecAggPlusWorkflow:
 
     Parameters
     ----------
-    num_shares : Union[int, float]
+    num_shares : int | float
         The number of shares into which each client's private key is split under
         the SecAgg+ protocol. If specified as a float, it represents the proportion
         of all selected clients, and the number of shares will be set dynamically in
         the run time. A private key can be reconstructed from these shares, allowing
         for the secure aggregation of model updates. Each client sends one share to
         each of its neighbors while retaining one.
-    reconstruction_threshold : Union[int, float]
+    reconstruction_threshold : int | float
         The minimum number of shares required to reconstruct a client's private key,
         or, if specified as a float, it represents the proportion of the total number
         of shares needed for reconstruction. This threshold ensures privacy by allowing
@@ -167,8 +167,8 @@ class SecAggPlusWorkflow:
 
     def __init__(  # pylint: disable=R0913
         self,
-        num_shares: Union[int, float],
-        reconstruction_threshold: Union[int, float],
+        num_shares: int | float,
+        reconstruction_threshold: int | float,
         *,
         max_weight: float = 1000.0,
         clipping_range: float = 8.0,

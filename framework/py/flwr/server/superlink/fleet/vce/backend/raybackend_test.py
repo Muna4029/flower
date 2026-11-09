@@ -221,7 +221,7 @@ class TestRayBackend(TestCase):
 
             try:
                 # Test the pool size calculation
-                client_resources: dict[str, Union[int, float]] = {
+                client_resources: dict[str, int | float] = {
                     "num_cpus": 2,
                     "num_gpus": 0,
                 }

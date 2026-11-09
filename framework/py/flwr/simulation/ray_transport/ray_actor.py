@@ -82,7 +82,7 @@ class ClientAppActor(VirtualClientEngineActor):
             on_actor_init_fn()
 
 
-def pool_size_from_resources(client_resources: dict[str, Union[int, float]]) -> int:
+def pool_size_from_resources(client_resources: dict[str, int | float]) -> int:
     """Calculate number of Actors that fit in the cluster.
 
     For this we consider the resources available on each node and those required per
@@ -166,7 +166,7 @@ class VirtualClientEngineActorPool(ActorPool):
     def __init__(
         self,
         create_actor_fn: Callable[[], type[VirtualClientEngineActor]],
-        client_resources: dict[str, Union[int, float]],
+        client_resources: dict[str, int | float],
         actor_list: Optional[list[type[VirtualClientEngineActor]]] = None,
     ):
         self.client_resources = client_resources

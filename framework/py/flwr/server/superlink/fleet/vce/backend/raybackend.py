@@ -32,7 +32,7 @@ from flwr.simulation.ray_transport.utils import enable_tf_gpu_growth
 
 from .backend import Backend, BackendConfig
 
-ClientResourcesDict = dict[str, Union[int, float]]
+ClientResourcesDict = dict[str, int | float]
 ActorArgsDict = dict[str, Union[int, float, Callable[[], None]]]
 
 

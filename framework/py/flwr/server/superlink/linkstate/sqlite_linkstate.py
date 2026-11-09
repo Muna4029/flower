@@ -310,7 +310,7 @@ class SqliteLinkState(LinkState):  # pylint: disable=R0904
             msg = f"`node_id` must be != {SUPERLINK_NODE_ID}"
             raise AssertionError(msg)
 
-        data: dict[str, Union[str, int]] = {}
+        data: dict[str, str | int] = {}
 
         # Convert the uint64 value to sint64 for SQLite
         data["node_id"] = convert_uint64_to_sint64(node_id)
