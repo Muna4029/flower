@@ -46,7 +46,8 @@ def test_exit_code_help_url_exist() -> None:
 
         # Retrieve the title from the help URL
         f = files[code]
-        title = f.read_text().split("\n")[0]
+        title_lines = [line.strip() for line in f.read_text().split("\n")[:3]]
+        title = title_lines[1] if title_lines[0].startswith("#") else title_lines[0]
 
         # Assert the title is correct
         assert (
