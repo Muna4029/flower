@@ -14,7 +14,6 @@
 # ==============================================================================
 """ArrayRecord."""
 
-
 from __future__ import annotations
 
 import gc
@@ -34,7 +33,9 @@ from .array import Array
 from .typeddict import TypedDict
 
 if TYPE_CHECKING:
-    import torch
+    from torch import Tensor
+else:
+    Tensor = Any
 
 
 def _raise_array_record_init_error() -> None:
@@ -86,8 +87,8 @@ class ArrayRecord(TypedDict[str, Array], InflatableObject):
     numpy_ndarrays : Optional[list[NDArray]] (default: None)
         A list of NumPy arrays. Each array will be automatically converted
         into an :class:`Array` and stored in this record with generated keys.
-    torch_state_dict : Optional[OrderedDict[str, torch.Tensor]] (default: None)
-        A PyTorch ``state_dict`` (``str`` keys to ``torch.Tensor`` values). Each
+    torch_state_dict : Optional[OrderedDict[str, Tensor]] (default: None)
+        A PyTorch ``state_dict`` (``str`` keys to ``Tensor`` values). Each
         tensor will be converted into an :class:`Array` and stored in this record.
     keep_input : bool (default: True)
         If ``False``, entries from the input are removed after being added to
@@ -142,7 +143,7 @@ class ArrayRecord(TypedDict[str, Array], InflatableObject):
     @overload
     def __init__(  # noqa: E704
         self,
-        torch_state_dict: OrderedDict[str, torch.Tensor],
+        torch_state_dict: OrderedDict[str, Tensor],
         *,
         keep_input: bool = True,
     ) -> None: ...
@@ -151,7 +152,7 @@ class ArrayRecord(TypedDict[str, Array], InflatableObject):
         self,
         *args: Any,
         numpy_ndarrays: list[NDArray] | None = None,
-        torch_state_dict: OrderedDict[str, torch.Tensor] | None = None,
+        torch_state_dict: OrderedDict[str, Tensor] | None = None,
         array_dict: OrderedDict[str, Array] | None = None,
         keep_input: bool = True,
     ) -> None:
@@ -161,7 +162,7 @@ class ArrayRecord(TypedDict[str, Array], InflatableObject):
         # Support the following initialization formats:
         # 1. cls(array_dict: OrderedDict[str, Array], keep_input: bool)
         # 2. cls(numpy_ndarrays: list[NDArray], keep_input: bool)
-        # 3. cls(torch_state_dict: dict[str, torch.Tensor], keep_input: bool)
+        # 3. cls(torch_state_dict: dict[str, Tensor], keep_input: bool)
 
         # Init the argument
         if len(args) > 1:
@@ -230,9 +231,7 @@ class ArrayRecord(TypedDict[str, Array], InflatableObject):
                 and all(isinstance(k, str) for k in arg.keys())
                 and all(isinstance(v, torch.Tensor) for v in arg.values())
             ):
-                torch_state_dict = cast(
-                    OrderedDict[str, torch.Tensor], arg  # type: ignore
-                )
+                torch_state_dict = cast(OrderedDict[str, Any], arg)
                 converted = self.from_torch_state_dict(
                     torch_state_dict, keep_input=keep_input
                 )
@@ -274,7 +273,8 @@ class ArrayRecord(TypedDict[str, Array], InflatableObject):
 
             if not keep_input:
                 # Remove the reference
-                ndarrays[i] = None  # type: ignore
+                ndarrays_any = cast(list[Any], ndarrays)
+                ndarrays_any[i] = None
                 total_serialized_bytes += len(record[str(i)].data)
 
                 # If total serialized data exceeds the threshold, trigger GC
@@ -291,7 +291,7 @@ class ArrayRecord(TypedDict[str, Array], InflatableObject):
     @classmethod
     def from_torch_state_dict(
         cls,
-        state_dict: OrderedDict[str, torch.Tensor],
+        state_dict: OrderedDict[str, Tensor],
         *,
         keep_input: bool = True,
     ) -> ArrayRecord:
@@ -335,7 +335,7 @@ class ArrayRecord(TypedDict[str, Array], InflatableObject):
 
     def to_torch_state_dict(
         self, *, keep_input: bool = True
-    ) -> OrderedDict[str, torch.Tensor]:
+    ) -> OrderedDict[str, Tensor]:
         """Return the ArrayRecord as a PyTorch ``state_dict``."""
         if not (torch := sys.modules.get("torch")):
             raise RuntimeError(

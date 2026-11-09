@@ -14,17 +14,15 @@
 # ==============================================================================
 """Flower type definitions."""
 
-
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Callable, Optional, Union
+from typing import Any, Callable, Optional, TypeAlias, Union
 
 import numpy as np
-import numpy.typing as npt
 
-NDArray = npt.NDArray[Any]
-NDArrayInt = npt.NDArray[np.int_]
-NDArrayFloat = npt.NDArray[np.float64]
+NDArray: TypeAlias = np.ndarray[Any, Any]
+NDArrayInt: TypeAlias = np.ndarray[Any, Any]
+NDArrayFloat: TypeAlias = np.ndarray[Any, Any]
 NDArrays = list[NDArray]
 
 # The following union type contains Python types corresponding to ProtoBuf types that
