@@ -16,7 +16,7 @@
 # mypy: disallow_untyped_calls=False
 
 from functools import partial, reduce
-from typing import Any, Callable, Union
+from typing import Any, Callable, Union, cast
 
 import numpy as np
 
@@ -48,18 +48,17 @@ def aggregate_inplace(results: list[tuple[ClientProxy, FitRes]]) -> NDArrays:
     num_examples_total = sum(fit_res.num_examples for (_, fit_res) in results)
 
     # Compute scaling factors for each result
-    scaling_factors = np.asarray(
-        [fit_res.num_examples / num_examples_total for _, fit_res in results]
-    )
+    scaling_factors = [
+        fit_res.num_examples / num_examples_total for _, fit_res in results
+    ]
 
     def _try_inplace(
-        x: NDArray, y: Union[NDArray, np.float64], np_binary_op: np.ufunc
+        x: NDArray, y: Union[NDArray, float], np_binary_op: np.ufunc
     ) -> NDArray:
-        return (  # type: ignore[no-any-return]
-            np_binary_op(x, y, out=x)
-            if np.can_cast(y, x.dtype, casting="same_kind")
-            else np_binary_op(x, np.array(y, x.dtype), out=x)
-        )
+        y_arr: NDArray = np.asarray(y)
+        if not np.can_cast(y_arr.dtype, x.dtype, casting="same_kind"):
+            y_arr = np.asarray(y_arr, dtype=x.dtype)
+        return cast(NDArray, np_binary_op(x, y_arr, out=x))
 
     # Let's do in-place aggregation
     # Get first result, then add up each other
@@ -123,7 +122,8 @@ def aggregate_krum(
 
     if to_keep > 0:
         # Choose to_keep clients and return their average (MultiKrum)
-        best_indices = np.argsort(scores)[::-1][len(scores) - to_keep :]  # noqa: E203
+        sorted_indices = cast(np.ndarray[Any, Any], np.argsort(scores)).tolist()
+        best_indices = sorted_indices[::-1][len(scores) - to_keep :]  # noqa: E203
         best_results = [results[i] for i in best_indices]
         return aggregate(best_results)
 
@@ -235,7 +235,7 @@ def aggregate_qffl(
         for j in range(1, len(deltas)):
             tmp += scaled_deltas[j][i]
         updates.append(tmp)
-    new_parameters = [(u - v) * 1.0 for u, v in zip(parameters, updates)]
+    new_parameters = [cast(NDArray, (u - v) * 1.0) for u, v in zip(parameters, updates)]
     return new_parameters
 
 
@@ -245,8 +245,14 @@ def _compute_distances(weights: list[NDArrays]) -> NDArray:
     Input: weights - list of weights vectors
     Output: distances - matrix distance_matrix of squared distances between the vectors
     """
-    flat_w = np.array([np.concatenate(p, axis=None).ravel() for p in weights])
-    distance_matrix = np.zeros((len(weights), len(weights)))
+    flat_w: list[NDArray] = []
+    for parameters in weights:
+        concatenated: NDArray = np.concatenate(parameters, axis=None)
+        flat_w.append(concatenated.ravel())
+    distance_matrix: np.ndarray[Any, np.dtype[np.float64]] = np.zeros(
+        (len(weights), len(weights)),
+        dtype=np.float64,
+    )
     for i, flat_w_i in enumerate(flat_w):
         for j, flat_w_j in enumerate(flat_w):
             delta = flat_w_i - flat_w_j
@@ -373,8 +379,8 @@ def _aggregate_n_closest_weights(
         indices = np.argpartition(diff_np, kth=beta_closest - 1, axis=0)
         # Take the weights (coordinate-wise) corresponding to the beta of the
         # closest distances
-        beta_closest_weights = np.take_along_axis(
-            other_weights_layer_np, indices=indices, axis=0
+        beta_closest_weights: NDArray = np.asarray(
+            np.take_along_axis(other_weights_layer_np, indices=indices, axis=0)
         )[:beta_closest]
         aggregated_weights.append(np.mean(beta_closest_weights, axis=0))
     return aggregated_weights
