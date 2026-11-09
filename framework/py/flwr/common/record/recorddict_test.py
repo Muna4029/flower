@@ -19,7 +19,7 @@ import json
 import pickle
 from collections import OrderedDict
 from copy import deepcopy
-from typing import Callable, Union, cast
+from typing import Any, Callable, Union, cast
 from unittest.mock import Mock, PropertyMock, patch
 
 import numpy as np
@@ -47,8 +47,8 @@ from . import Array, ArrayRecord, ConfigRecord, MetricRecord, RecordDict
 
 def get_ndarrays() -> NDArrays:
     """Return list of NumPy arrays."""
-    arr1 = np.array([[1.0, 2.0], [3.0, 4], [5.0, 6.0]])
-    arr2 = np.eye(2, 7, 3)
+    arr1 = cast(NDArray, np.array([[1.0, 2.0], [3.0, 4], [5.0, 6.0]]))
+    arr2 = cast(NDArray, np.eye(2, 7, 3))
 
     return [arr1, arr2]
 
@@ -70,7 +70,9 @@ def test_ndarray_to_array() -> None:
 
     array = ndarray_to_array(arr)
 
-    arr_ = np.frombuffer(buffer=array.data, dtype=array.dtype).reshape(array.shape)
+    arr_ = cast(Any, np.frombuffer(buffer=array.data, dtype=array.dtype)).reshape(
+        array.shape
+    )
 
     assert np.array_equal(arr, arr_)
 
