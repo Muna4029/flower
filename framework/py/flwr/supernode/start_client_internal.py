@@ -386,10 +386,11 @@ def _push_messages(
         # This will yield (object_id, content) pairs
         def yield_object_contents(_obj_tree: ObjectTree) -> Iterator[tuple[str, bytes]]:
             for tree in iterate_object_tree(_obj_tree):
-                while (content := object_store.get(tree.object_id)) is b"":
+                while (content := object_store.get(tree.object_id)) == b"":
                     # Wait for the content to be available
                     time.sleep(0.5)
 
+                assert content is not None
                 yield tree.object_id, content
 
         # Send the message
