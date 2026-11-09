@@ -89,6 +89,7 @@ def run(
             "--stream",
             help="Use `--stream` with `flwr run` to display logs;\n "
             "logs are not streamed by default.",
+            is_flag=True,
         ),
     ] = False,
     output_format: Annotated[
