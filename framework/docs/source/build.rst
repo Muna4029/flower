@@ -1,12 +1,16 @@
-:og:description: Learn how to build Flower apps with step-by-step guides on installation, configuration, strategy implementation, model checkpoints, and more.
+:og:description: Learn how to build Flower apps with step-by-step guides on
+    installation, configuration, strategy implementation, model checkpoints, and more.
+
 .. meta::
     :description: Learn how to build Flower apps with step-by-step guides on installation, configuration, strategy implementation, model checkpoints, and more.
 
-Build Flower apps
-=================
+###################
+ Build Flower apps
+###################
 
-How-to guides
--------------
+***************
+ How-to guides
+***************
 
 Problem-oriented how-to guides show step-by-step how to achieve a specific goal.
 
@@ -14,6 +18,7 @@ Problem-oriented how-to guides show step-by-step how to achieve a specific goal.
     :titlesonly:
 
     how-to-install-flower
+    how-to-configure-pyproject-toml
     how-to-configure-clients
     how-to-design-stateful-clients
     how-to-use-strategies

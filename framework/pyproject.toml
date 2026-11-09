@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "flwr"
-version = "1.19.0"
+version = "1.20.0"
 description = "Flower: A Friendly Federated AI Framework"
 license = "Apache-2.0"
 authors = ["The Flower Authors <hello@flower.ai>"]
@@ -65,6 +65,7 @@ python = "^3.9.2"
 # Mandatory dependencies
 numpy = ">=1.26.0,<3.0.0"
 grpcio = "^1.62.3,!=1.65.0"
+grpcio-health-checking = "^1.62.3"
 protobuf = "^4.21.6"
 cryptography = "^44.0.1"
 pycryptodome = "^3.18.0"
@@ -126,7 +127,8 @@ pipreqs = "==0.4.13"
 mdformat = "==0.7.18"
 mdformat-gfm = "==0.3.6"
 mdformat-frontmatter = "==2.0.1"
-mdformat-beautysh = "==0.1.1"
+mdformat-beautysh = "==1.0.0"
+beautysh = ">=6.0.1"
 twine = "==5.1.1"
 types-PyYAML = "^6.0.2"
 pyroma = "==4.2"
@@ -176,7 +178,7 @@ patterns = ["*.py"]
 ignore_patterns = []
 
 [tool.mypy]
-plugins = ["numpy.typing.mypy_plugin"]
+
 ignore_missing_imports = true
 strict = true
 
