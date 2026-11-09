@@ -14,7 +14,6 @@
 # ==============================================================================
 """Flower command line interface `log` command."""
 
-
 import time
 from logging import DEBUG, ERROR, INFO
 from pathlib import Path
@@ -156,7 +155,8 @@ def log(
     stream: Annotated[
         bool,
         typer.Option(
-            "--stream/--show",
+            "--stream",
+            "--show",
             help="Flag to stream or print logs from the Flower run",
         ),
     ] = True,

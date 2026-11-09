@@ -31,7 +31,7 @@ from flwr.common.logger import log
 
 def get_norm(input_arrays: NDArrays) -> float:
     """Compute the L2 norm of the flattened input."""
-    array_norms = [np.linalg.norm(array.flat) for array in input_arrays]
+    array_norms = [np.linalg.norm(np.ravel(array)) for array in input_arrays]
     # pylint: disable=consider-using-generator
     return float(np.sqrt(sum([norm**2 for norm in array_norms])))
 
@@ -39,7 +39,7 @@ def get_norm(input_arrays: NDArrays) -> float:
 def add_gaussian_noise_inplace(input_arrays: NDArrays, std_dev: float) -> None:
     """Add Gaussian noise to each element of the input arrays."""
     for array in input_arrays:
-        noise = np.random.normal(0, std_dev, array.shape).astype(array.dtype)
+        noise = np.asarray(np.random.normal(0, std_dev, array.shape), dtype=array.dtype)
         array += noise
 
 

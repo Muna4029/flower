@@ -14,11 +14,10 @@
 # ==============================================================================
 """RecordDict tests."""
 
-
 import pickle
 from collections import OrderedDict
 from copy import deepcopy
-from typing import Callable, Union, cast
+from typing import Any, Callable, Union, cast
 from unittest.mock import Mock, PropertyMock, patch
 
 import numpy as np
@@ -61,11 +60,16 @@ def ndarray_to_array(ndarray: NDArray) -> Array:
 def test_ndarray_to_array() -> None:
     """Test creation of Array object from NumPy ndarray."""
     shape = (2, 7, 9)
-    arr = np.eye(*shape)
+    arr = cast(NDArray, np.eye(*shape))
 
     array = ndarray_to_array(arr)
 
-    arr_ = np.frombuffer(buffer=array.data, dtype=array.dtype).reshape(array.shape)
+    arr_ = cast(
+        NDArray,
+        cast(Any, np.frombuffer(buffer=array.data, dtype=array.dtype)).reshape(
+            array.shape
+        ),
+    )
 
     assert np.array_equal(arr, arr_)
 
@@ -76,7 +80,7 @@ def test_parameters_to_array_and_back() -> None:
 
     # Array represents a single array, unlike parameters, which represent a
     # list of arrays
-    ndarray = ndarrays[0]
+    ndarray: NDArray = ndarrays[0]
 
     parameters = ndarrays_to_parameters([ndarray])
 

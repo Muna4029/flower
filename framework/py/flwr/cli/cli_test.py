@@ -29,11 +29,6 @@ def test_version_args() -> None:
     assert result.exit_code == 0
     assert f"Flower version: {package_version}\n" in result.output
 
-    # Test the -V flag
-    result = runner.invoke(app, ["-V"])
-    assert result.exit_code == 0
-    assert f"Flower version: {package_version}\n" in result.output
-
 
 def test_help_command() -> None:
     """Test the -h flag."""
