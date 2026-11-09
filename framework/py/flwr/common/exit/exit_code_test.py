@@ -46,7 +46,12 @@ def test_exit_code_help_url_exist() -> None:
 
         # Retrieve the title from the help URL
         f = files[code]
-        title = f.read_text().split("\n")[0]
+        lines = f.read_text().split("\n")
+        # docstrfmt formats titles with an overline, so skip the overline line
+        # if present (overline consists entirely of a single repeated character)
+        title = lines[0].strip()
+        if title and len(set(title)) == 1:
+            title = lines[1].strip()
 
         # Assert the title is correct
         assert (
