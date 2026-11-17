@@ -13,3 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 """Flower SuperExec service."""
+
+from flwr.superlink.executor import load_executor
+
+__all__ = ["load_executor"]
