@@ -46,7 +46,9 @@ def test_exit_code_help_url_exist() -> None:
 
         # Retrieve the title from the help URL
         f = files[code]
-        title = f.read_text().split("\n")[0]
+        lines = f.read_text().split("\n")
+        # Skip the overline and read the actual title (second line)
+        title = lines[1].strip() if len(lines) > 1 else lines[0]
 
         # Assert the title is correct
         assert (
