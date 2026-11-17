@@ -339,7 +339,8 @@ class TestArrayRecord(unittest.TestCase):
 )
 def test_count_bytes(shape: list[int], dtype: str) -> None:
     """Test bytes in a ArrayRecord are computed correctly."""
-    original_array = np.random.randn(*shape).astype(np.dtype(dtype))
+    random_array: Any = np.random.randn(*shape)
+    original_array = random_array.astype(np.dtype(dtype))
 
     buff = ndarray_to_bytes(original_array)
 
