@@ -14,8 +14,7 @@
 # ==============================================================================
 """Utility functions for model quantization."""
 
-
-from typing import cast
+from typing import Any, cast
 
 import numpy as np
 
@@ -26,10 +25,10 @@ def _stochastic_round(arr: NDArrayFloat) -> NDArrayInt:
     ret: NDArrayInt = np.ceil(arr).astype(np.int32)
     rand_arr = np.random.rand(*ret.shape)
     if len(ret.shape) == 0:
-        if rand_arr < ret - arr:
+        if rand_arr < cast(Any, ret - arr):
             ret -= 1
     else:
-        ret[rand_arr < ret - arr] -= 1
+        ret[rand_arr < cast(Any, ret - arr)] -= 1
     return ret
 
 
