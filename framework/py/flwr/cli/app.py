@@ -44,6 +44,7 @@ app.command()(build)
 app.command()(install)
 app.command()(log)
 app.command()(ls)
+app.command(hidden=True)(ls)
 app.command()(stop)
 app.command()(login)
 
