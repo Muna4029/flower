@@ -4,8 +4,9 @@
 
 .. _quickstart-fastai:
 
-Quickstart fastai
-=================
+###################
+ Quickstart fastai
+###################
 
 In this federated learning tutorial we will learn how to train a SqueezeNet model on
 MNIST using Flower and fastai. It is recommended to create a virtual environment and run
@@ -111,4 +112,4 @@ in ``pyproject.toml`` like this:
 
     Check the `source code
     <https://github.com/adap/flower/tree/main/examples/quickstart-fastai>`_ of this
-    tutorial in ``examples/quickstart-fastai`` in the Flower GitHub repository.
+    tutorial in ``examples/quickstart-fasai`` in the Flower GitHub repository.
