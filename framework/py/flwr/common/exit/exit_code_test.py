@@ -20,6 +20,14 @@ from pathlib import Path
 from .exit_code import EXIT_CODE_HELP, ExitCode
 
 
+def _read_rst_title(path: Path) -> str:
+    """Read the top-level title from an rST file."""
+    lines = path.read_text().splitlines()
+    if len(lines) >= 3 and lines[0] == lines[2]:
+        return lines[1].strip()
+    return lines[0].strip()
+
+
 def test_exit_code_help_exist() -> None:
     """Test if all exit codes have help message."""
     for name, code in ExitCode.__dict__.items():
@@ -46,8 +54,7 @@ def test_exit_code_help_url_exist() -> None:
 
         # Retrieve the title from the help URL
         f = files[code]
-        title = f.read_text().split("\n")[0]
-
+        title = _read_rst_title(f)
         # Assert the title is correct
         assert (
             title == f"[{code}] {name}"
