@@ -36,7 +36,6 @@ class FedAvgClient(NumPyClient):
         batch_size: int,
         client_state,
     ) -> None:
-
         # load trainset
         self.data = trainset
 
