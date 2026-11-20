@@ -14,7 +14,6 @@
 # ==============================================================================
 """Contextmanager for a REST request-response channel to the Flower server."""
 
-
 from collections.abc import Iterator
 from contextlib import contextmanager
 from logging import ERROR, WARN
@@ -91,9 +90,7 @@ def http_request_response(  # pylint: disable=R0913,R0914,R0915,R0917
     insecure: bool,  # pylint: disable=unused-argument
     retry_invoker: RetryInvoker,
     max_message_length: int = GRPC_MAX_MESSAGE_LENGTH,  # pylint: disable=W0613
-    root_certificates: Optional[
-        Union[bytes, str]
-    ] = None,  # pylint: disable=unused-argument
+    root_certificates: Optional[Union[bytes, str]] = None,  # pylint: disable=unused-argument
     authentication_keys: Optional[  # pylint: disable=unused-argument
         tuple[ec.EllipticCurvePrivateKey, ec.EllipticCurvePublicKey]
     ] = None,

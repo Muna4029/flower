@@ -1,4 +1,5 @@
 # Copyright 2025 Flower Labs GmbH. All Rights Reserved.
+# Updated Python version requirement to >=3.10 to resolve dependency issue.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

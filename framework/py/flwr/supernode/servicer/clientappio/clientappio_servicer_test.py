@@ -14,7 +14,6 @@
 # ==============================================================================
 """Test the ClientAppIo API servicer."""
 
-
 import unittest
 from unittest.mock import Mock
 
@@ -35,7 +34,6 @@ from flwr.proto.appio_pb2 import (  # pylint:disable=E0611
 )
 from flwr.proto.message_pb2 import Context as ProtoContext  # pylint:disable=E0611
 from flwr.proto.message_pb2 import (  # pylint:disable=E0611
-    ObjectIDs,
     PullObjectResponse,
     PushObjectRequest,
     PushObjectResponse,

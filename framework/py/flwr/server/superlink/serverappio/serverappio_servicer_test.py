@@ -14,7 +14,6 @@
 # ==============================================================================
 """ServerAppIoServicer tests."""
 
-
 import tempfile
 import unittest
 from typing import Optional
@@ -508,7 +507,6 @@ class TestServerAppIoServicer(unittest.TestCase):  # pylint: disable=R0902, R090
             + message_ins.metadata.ttl
             + 0.1,
         ):  # over TTL limit
-
             request = PullAppMessagesRequest(message_ids=[str(msg_id)], run_id=run_id)
 
             # Execute
