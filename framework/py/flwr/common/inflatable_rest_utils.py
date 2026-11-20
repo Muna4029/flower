@@ -14,7 +14,6 @@
 # ==============================================================================
 """InflatableObject REST utils."""
 
-
 from typing import Callable
 
 from flwr.proto.message_pb2 import (  # pylint: disable=E0611
