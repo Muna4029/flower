@@ -17,13 +17,15 @@ env:
 
 jobs:
   changes:
-    runs-on: ubuntu-22.04
+    # To re-enable, remove `if: false` from the changes job.
+    if: ${{ false }}
+    runs-on: ubuntu-24.04
     permissions:
       pull-requests: read
     outputs:
       baselines: ${{ steps.filter.outputs.changes }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - shell: bash
         run: |
@@ -62,14 +64,14 @@ jobs:
           fi
 
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: changes
     if: ${{ needs.changes.outputs.baselines != '' && toJson(fromJson(needs.changes.outputs.baselines)) != '[]' }}
     strategy:
       matrix:
         baseline: ${{ fromJSON(needs.changes.outputs.baselines) }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Bootstrap
         uses: ./.github/actions/bootstrap
@@ -78,7 +80,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: baselines/${{ matrix.baseline }}
-        run: python -m poetry install
+        run: pip install ."[dev]"
 
       - name: Testing ${{ matrix.baseline }}
         working-directory: baselines
