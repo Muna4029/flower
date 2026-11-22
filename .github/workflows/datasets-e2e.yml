@@ -6,11 +6,13 @@ on:
       - main
     paths:
       - "datasets/flwr_datasets/**"
+      - "datasets/e2e/**"
   pull_request:
     branches:
       - main
     paths:
       - "datasets/flwr_datasets/**"
+      - "datasets/e2e/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref == 'refs/heads/main' && github.run_id || github.event.pull_request.number || github.ref }}
@@ -18,10 +20,12 @@ concurrency:
 
 env:
   FLWR_TELEMETRY_ENABLED: 0
+  UV_NO_MANAGED_PYTHON: 1
+  UV_PYTHON_DOWNLOADS: never
 
 jobs:
   frameworks:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     # Using approach described here:
     # https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs
@@ -41,12 +45,26 @@ jobs:
         working-directory: datasets/e2e/${{ matrix.directory }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Bootstrap
         uses: ./.github/actions/bootstrap
         with:
-          python-version: 3.9
+          python-version: 3.11.14
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: false
+          docker-images: false
+          swap-storage: false
+      - name: Install dependencies (system)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
       - name: Install dependencies
-        run: python -m poetry install
+        run: uv sync --locked
       - name: Run tests
-        run: python -m unittest discover -p '*_test.py'
+        run: uv run --no-sync python -m unittest discover -p '*_test.py'
