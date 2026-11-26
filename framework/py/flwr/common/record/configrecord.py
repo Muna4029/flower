@@ -14,7 +14,6 @@
 # ==============================================================================
 """ConfigRecord."""
 
-
 from __future__ import annotations
 
 from logging import WARN
@@ -120,10 +119,9 @@ class ConfigRecord(TypedDict[str, ConfigRecordValues], InflatableObject):
 
     def __init__(
         self,
-        config_dict: dict[str, ConfigRecordValues] | None = None,
+        config_dict: Optional[Dict[str, ConfigRecordValues]] = None,
         keep_input: bool = True,
     ) -> None:
-
         super().__init__(_check_key, _check_value)
         if config_dict:
             for k in list(config_dict.keys()):
@@ -187,7 +185,9 @@ class ConfigRecord(TypedDict[str, ConfigRecordValues], InflatableObject):
 
     @classmethod
     def inflate(
-        cls, object_content: bytes, children: dict[str, InflatableObject] | None = None
+        cls,
+        object_content: bytes,
+        children: Optional[Dict[str, InflatableObject]] = None,
     ) -> ConfigRecord:
         """Inflate a ConfigRecord from bytes.
 
@@ -213,7 +213,7 @@ class ConfigRecord(TypedDict[str, ConfigRecordValues], InflatableObject):
         protos = {item.key: item.value for item in config_record_proto.items}
         return ConfigRecord(
             config_dict=cast(
-                dict[str, ConfigRecordValues],
+                Dict[str, ConfigRecordValues],
                 record_value_dict_from_proto(protos),
             ),
             keep_input=False,
