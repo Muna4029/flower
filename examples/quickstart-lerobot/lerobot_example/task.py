@@ -3,7 +3,7 @@
 import time
 from collections import OrderedDict
 from pathlib import Path
-from typing import Any
+from typing import Any, Union
 
 import gym_pusht  # noqa: F401
 import gymnasium as gym
@@ -164,7 +164,7 @@ def train(net=None, trainloader=None, epochs=None, device=None) -> None:
                 break
 
 
-def test(partition_id: int, net, device, output_dir: Path) -> tuple[Any | float, Any]:
+def test(partition_id: int, net, device, output_dir: Path) -> tuple[Union[Any, float], Any]:
     # in lerobot terminology policy is the neural network
     policy = net
     policy.eval()
