@@ -70,7 +70,7 @@ def get_dataset():
 
 def load_data(
     partition_id: int, num_partitions: int, model_name: str, device=None
-) -> tuple[DataLoader[Any], DataLoader[Any]]:
+) -> tuple[DataLoader[Any], Any]:
     """Load pusht data (training and eval)"""
     # Only initialize `FederatedDataset` once
     global fds
@@ -107,7 +107,7 @@ def load_data(
     # LeRobot pusht test samples are not loaded but rather generated via gym
     # therefore no need to return a testloader
 
-    return trainloader
+    return trainloader, None
 
 
 def get_model(dataset_stats: dict):
@@ -164,7 +164,7 @@ def train(net=None, trainloader=None, epochs=None, device=None) -> None:
                 break
 
 
-def test(partition_id: int, net, device, output_dir: Path) -> tuple[Any | float, Any]:
+def test(partition_id: int, net, device, output_dir: Path) -> tuple[Any, Any]:
     # in lerobot terminology policy is the neural network
     policy = net
     policy.eval()

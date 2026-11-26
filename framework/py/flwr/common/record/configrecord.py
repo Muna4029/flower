@@ -150,12 +150,11 @@ class ConfigRecord(TypedDict[str, ConfigRecordValues]):
 
         for k, v in self.items():
             if isinstance(v, list):
-                if isinstance(v[0], (bytes, str)):
-                    # not all str are of equal length necessarily
-                    # for both the footprint of each element is 1 Byte
-                    num_bytes += int(sum(len(s) for s in v))  # type: ignore
-                else:
-                    num_bytes += get_var_bytes(v[0]) * len(v)
+                # Safely handle empty lists and mixed-type lists by summing
+                # the byte-size of each element individually.
+                # This avoids indexing v[0] which would raise on empty lists
+                # and also correctly accounts for mixed element types.
+                num_bytes += sum(get_var_bytes(el) for el in v)
             else:
                 num_bytes += get_var_bytes(v)
 

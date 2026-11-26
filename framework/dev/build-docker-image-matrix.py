@@ -23,7 +23,7 @@ import json
 import sys
 from dataclasses import asdict, dataclass, field
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, List, Optional
 
 # when we switch to Python 3.11 in the ci, we need to change the DistroName to:
 # class DistroName(StrEnum):
@@ -130,7 +130,7 @@ class BaseImage(BaseImageBuilder):
         return self.file_dir_fn(self.build_args)
 
     @property
-    def tags(self) -> str:
+    def tags(self) -> list[str]:
         return self.tags_fn(self.build_args)
 
     @property
@@ -154,7 +154,7 @@ def new_binary_image(
     name: str,
     base_image: BaseImage,
     tags_fn: Optional[Callable],
-) -> Dict[str, Any]:
+) -> "BinaryImage":
     tags = []
     if tags_fn is not None:
         tags += tags_fn(base_image) or []
@@ -171,12 +171,14 @@ def generate_binary_images(
     name: str,
     base_images: List[BaseImage],
     tags_fn: Optional[Callable] = None,
-    filter: Optional[Callable] = None,
-) -> List[Dict[str, Any]]:
-    filter = filter or (lambda _: True)
+    filter_fn: Optional[Callable] = None,
+) -> list["BinaryImage"]:
+    filter_fn = filter_fn or (lambda _: True)
 
     return [
-        new_binary_image(name, image, tags_fn) for image in base_images if filter(image)
+        new_binary_image(name, image, tags_fn)
+        for image in base_images
+        if filter_fn(image)
     ]
 
 
@@ -227,7 +229,9 @@ def tag_serverapp_clientapp_images(image: BaseImage) -> List[str]:
 #
 # Build matrix for stable releases
 #
-def build_stable_matrix(flwr_version: str) -> List[BaseImage]:
+def build_stable_matrix(
+    flwr_version: str,
+) -> tuple[list[BaseImage], list["BinaryImage"]]:
     @dataclass
     class StableBaseImageBuildArgs:
         variant: Variant
@@ -341,7 +345,9 @@ DISTRO_VERSION={distro_version}
 #
 # Build matrix for unstable releases
 #
-def build_unstable_matrix(flwr_version_ref: str) -> List[BaseImage]:
+def build_unstable_matrix(
+    flwr_version_ref: str,
+) -> tuple[list[BaseImage], list["BinaryImage"]]:
     @dataclass
     class UnstableBaseImageBuildArgs:
         variant: Variant
