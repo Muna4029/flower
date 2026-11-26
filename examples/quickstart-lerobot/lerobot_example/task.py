@@ -164,7 +164,7 @@ def train(net=None, trainloader=None, epochs=None, device=None) -> None:
                 break
 
 
-def test(partition_id: int, net, device, output_dir: Path) -> tuple[Any | float, Any]:
+def test(partition_id: int, net, device, output_dir: Path) -> tuple[Any, Any]:
     # in lerobot terminology policy is the neural network
     policy = net
     policy.eval()

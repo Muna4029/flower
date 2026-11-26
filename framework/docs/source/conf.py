@@ -100,8 +100,8 @@ rst_prolog = """
 .. |ubuntu_version| replace:: 24.04
 .. |setuptools_version| replace:: 70.3.0
 .. |pip_version| replace:: 24.1.2
-.. |python_version| replace:: 3.9
-.. |python_full_version| replace:: 3.9.20
+.. |python_version| replace:: 3.10
+.. |python_full_version| replace:: 3.10.12
 """
 
 # -- General configuration ---------------------------------------------------

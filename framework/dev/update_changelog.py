@@ -15,7 +15,6 @@
 # ==============================================================================
 """Update the changelog using PR titles."""
 
-
 import re
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -70,7 +69,13 @@ PR_TYPE_TO_SECTION = {
 }
 
 # Maximum number of workers in the thread pool
-MAX_WORKERS = argv[2] if len(argv) > 2 else 10
+try:
+    mw = int(argv[2]) if len(argv) > 2 else 10
+    if mw <= 0:
+        raise ValueError("max workers must be positive")
+    MAX_WORKERS = mw
+except (ValueError, TypeError):
+    MAX_WORKERS = 10
 
 
 def _get_latest_tag(gh_api: Github) -> tuple[Repository, str]:
@@ -272,7 +277,7 @@ def _update_changelog(prs: set[PullRequest], tag: str, new_tag: str) -> bool:
             # Skip if the PR is already in changelog
             if f"#{pr_info.number}]" in content:
                 continue
-            
+
             # Skip Flower Intelligence PRs
             if parsed_title["project"] == "intelligence":
                 continue
@@ -374,7 +379,6 @@ def main() -> None:
     print("Updating the changelog...")
     new_version = _bump_minor_version(latest_tag)
     if _update_changelog(prs, latest_tag, new_version):
-
         if not new_version:
             print("Wrong tag format.")
             return
