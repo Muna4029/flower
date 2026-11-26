@@ -14,14 +14,13 @@
 # ==============================================================================
 """Flower command line interface utils."""
 
-
 import hashlib
 import json
 import re
 from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Callable, Optional, Union, cast
+from typing import Any, Callable, Optional, Union, cast, List, Dict, Type
 
 import grpc
 import typer
@@ -57,7 +56,7 @@ def prompt_text(
     return cast(str, result)
 
 
-def prompt_options(text: str, options: list[str]) -> str:
+def prompt_options(text: str, options: List[str]) -> str:
     """Ask user to select one of the given options and return the selected item."""
     # Turn options into a list with index as in " [ 0] quickstart-pytorch"
     options_formatted = [
@@ -212,7 +211,7 @@ def get_user_auth_config_path(root_dir: Path, federation: str) -> Path:
 def try_obtain_cli_auth_plugin(
     root_dir: Path,
     federation: str,
-    federation_config: dict[str, Any],
+    federation_config: Dict[str, Any],
     auth_type: Optional[str] = None,
 ) -> Optional[CliAuthPlugin]:
     """Load the CLI-side user auth plugin for the given auth type."""
@@ -240,7 +239,7 @@ def try_obtain_cli_auth_plugin(
 
     # Retrieve auth plugin class and instantiate it
     try:
-        all_plugins: dict[str, type[CliAuthPlugin]] = get_cli_auth_plugins()
+        all_plugins: Dict[str, Type[CliAuthPlugin]] = get_cli_auth_plugins()
         auth_plugin_class = all_plugins[auth_type]
         return auth_plugin_class(config_path)
     except KeyError:
@@ -260,7 +259,7 @@ def init_channel(
     )
 
     # Initialize the CLI-side user auth interceptor
-    interceptors: list[grpc.UnaryUnaryClientInterceptor] = []
+    interceptors: List[grpc.UnaryUnaryClientInterceptor] = []
     if auth_plugin is not None:
         # Check if TLS is enabled. If not, raise an error
         if insecure:

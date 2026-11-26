@@ -14,9 +14,8 @@
 # ==============================================================================
 """Utility to validate the `pyproject.toml` file."""
 
-
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, Tuple, List, Dict
 
 import tomli
 import typer
@@ -30,7 +29,7 @@ from flwr.common.config import (
 )
 
 
-def get_fab_metadata(fab_file: Union[Path, bytes]) -> tuple[str, str]:
+def get_fab_metadata(fab_file: Union[Path, bytes]) -> Tuple[str, str]:
     """Extract the fab_id and the fab_version from a FAB file or path.
 
     Parameters
@@ -50,7 +49,7 @@ def get_fab_metadata(fab_file: Union[Path, bytes]) -> tuple[str, str]:
 def load_and_validate(
     path: Optional[Path] = None,
     check_module: bool = True,
-) -> tuple[Optional[dict[str, Any]], list[str], list[str]]:
+) -> Tuple[Optional[Dict[str, Any]], List[str], List[str]]:
     """Load and validate pyproject.toml as dict.
 
     Parameters
@@ -89,7 +88,7 @@ def load_and_validate(
     return (config, errors, warnings)
 
 
-def load(toml_path: Path) -> Optional[dict[str, Any]]:
+def load(toml_path: Path) -> Optional[Dict[str, Any]]:
     """Load pyproject.toml and return as dict."""
     if not toml_path.is_file():
         return None
@@ -102,8 +101,8 @@ def load(toml_path: Path) -> Optional[dict[str, Any]]:
 
 
 def process_loaded_project_config(
-    config: Union[dict[str, Any], None], errors: list[str], warnings: list[str]
-) -> dict[str, Any]:
+    config: Union[Dict[str, Any], None], errors: List[str], warnings: List[str]
+) -> Dict[str, Any]:
     """Process and return the loaded project configuration.
 
     This function handles errors and warnings from the `load_and_validate` function,
@@ -134,9 +133,9 @@ def process_loaded_project_config(
 
 def validate_federation_in_project_config(
     federation: Optional[str],
-    config: dict[str, Any],
-    overrides: Optional[list[str]] = None,
-) -> tuple[str, dict[str, Any]]:
+    config: Dict[str, Any],
+    overrides: Optional[List[str]] = None,
+) -> Tuple[str, Dict[str, Any]]:
     """Validate the federation name in the Flower project configuration."""
     federation = federation or config["tool"]["flwr"]["federations"].get("default")
 
@@ -174,8 +173,8 @@ def validate_federation_in_project_config(
 
 
 def validate_certificate_in_federation_config(
-    app: Path, federation_config: dict[str, Any]
-) -> tuple[bool, Optional[bytes]]:
+    app: Path, federation_config: Dict[str, Any]
+) -> Tuple[bool, Optional[bytes]]:
     """Validate the certificates in the Flower project configuration.
 
     Accepted configurations:
@@ -226,7 +225,7 @@ def validate_certificate_in_federation_config(
     return insecure, root_certificates_bytes
 
 
-def exit_if_no_address(federation_config: dict[str, Any], cmd: str) -> None:
+def exit_if_no_address(federation_config: Dict[str, Any], cmd: str) -> None:
     """Exit if the provided federation_config has no "address" key."""
     if "address" not in federation_config:
         typer.secho(
@@ -238,7 +237,7 @@ def exit_if_no_address(federation_config: dict[str, Any], cmd: str) -> None:
         raise typer.Exit(code=1)
 
 
-def get_insecure_flag(federation_config: dict[str, Any]) -> bool:
+def get_insecure_flag(federation_config: Dict[str, Any]) -> bool:
     """Extract and validate the `insecure` flag from the federation configuration."""
     insecure_value = federation_config.get("insecure")
 
