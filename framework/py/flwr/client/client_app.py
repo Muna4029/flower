@@ -154,7 +154,7 @@ class ClientApp:
 
             category, action = message.metadata.message_type, DEFAULT_ACTION
             if "." in category:
-                category, action = category.split(".")
+                category, action = category.split(".", 1)
 
             # Check if the function is registered
             if (full_name := f"{category}.{action}") in self._registered_funcs:
