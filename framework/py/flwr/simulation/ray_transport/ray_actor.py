@@ -90,6 +90,11 @@ def pool_size_from_resources(client_resources: dict[str, Union[int, float]]) -> 
     """
     total_num_actors = 0
 
+    # Ensure we have sensible defaults in case there are no nodes or all nodes have
+    # empty resources so variables referenced later (e.g., in logging) are defined.
+    num_cpus = 0
+    num_gpus = 0
+
     # We calculate the number of actors that fit in a node per node basis. This is
     # the right way of doing it otherwise situations like the following arise: imagine
     # each client needs 3 CPUs and Ray has w nodes (one with 2 CPUs and another with 4)
@@ -408,7 +413,7 @@ class BasicActorPool:
         self,
         actor_type: type[VirtualClientEngineActor],
         client_resources: dict[str, Union[int, float]],
-        actor_kwargs: dict[str, Any],
+        actor_kwargs: dict[str, Any] | None = None,
     ):
         self.client_resources = client_resources
 

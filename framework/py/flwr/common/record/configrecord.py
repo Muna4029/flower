@@ -159,7 +159,10 @@ class ConfigRecord(TypedDict[str, ConfigRecordValues], InflatableObject):
 
         for k, v in self.items():
             if isinstance(v, list):
-                if isinstance(v[0], (bytes, str)):
+                # handle empty lists: they contribute no element bytes
+                if len(v) == 0:
+                    pass
+                elif isinstance(v[0], (bytes, str)):
                     # not all str are of equal length necessarily
                     # for both the footprint of each element is 1 Byte
                     num_bytes += int(sum(len(s) for s in v))  # type: ignore
@@ -211,7 +214,7 @@ class ConfigRecord(TypedDict[str, ConfigRecordValues], InflatableObject):
         obj_body = get_object_body(object_content, cls)
         config_record_proto = ProtoConfigRecord.FromString(obj_body)
         protos = {item.key: item.value for item in config_record_proto.items}
-        return ConfigRecord(
+        return cls(
             config_dict=cast(
                 dict[str, ConfigRecordValues],
                 record_value_dict_from_proto(protos),

@@ -121,20 +121,20 @@ def is_valid_project_name(name: str) -> bool:
 def sanitize_project_name(name: str) -> str:
     """Sanitize the given string to make it a valid Python project name.
 
-    This version replaces spaces, dots, slashes, and underscores with dashes, removes
+    This version replaces spaces, dots, slashes, and hyphens with underscores, removes
     any characters not allowed in Python project names, makes the string lowercase, and
     ensures it starts with a valid character.
     """
-    # Replace whitespace with '_'
-    name_with_hyphens = re.sub(r"[ ./_]", "-", name)
+    # Replace whitespace/dots/slashes/hyphens with '_'
+    name_with_underscores = re.sub(r"[ ./-]", "_", name)
 
     # Allowed characters in a module name: letters, digits, underscore
     allowed_chars = set(
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
     )
 
     # Make the string lowercase
-    sanitized_name = name_with_hyphens.lower()
+    sanitized_name = name_with_underscores.lower()
 
     # Remove any characters not allowed in Python module names
     sanitized_name = "".join(c for c in sanitized_name if c in allowed_chars)

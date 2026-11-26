@@ -70,7 +70,7 @@ def get_dataset():
 
 def load_data(
     partition_id: int, num_partitions: int, model_name: str, device=None
-) -> tuple[DataLoader[Any], DataLoader[Any]]:
+) -> DataLoader[Any]:
     """Load pusht data (training and eval)"""
     # Only initialize `FederatedDataset` once
     global fds
@@ -156,15 +156,15 @@ def train(net=None, trainloader=None, epochs=None, device=None) -> None:
             if step % log_freq == 0 and step > 0:
                 print(f"train step: {step} train loss: {loss.item():.3f}")
             step += 1
-            assert isinstance(
-                epochs, int
-            ), f"epochs value: {epochs} , type: {epochs.__class__}"
+            assert isinstance(epochs, int), (
+                f"epochs value: {epochs} , type: {epochs.__class__}"
+            )
             if step >= epochs:
                 done = True
                 break
 
 
-def test(partition_id: int, net, device, output_dir: Path) -> tuple[Any | float, Any]:
+def test(partition_id: int, net, device, output_dir: Path) -> Tuple[float, Any]:
     # in lerobot terminology policy is the neural network
     policy = net
     policy.eval()

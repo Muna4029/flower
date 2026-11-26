@@ -18,7 +18,13 @@ import datetime
 import os
 import sys
 
-from git import Repo
+try:
+    from git import Repo
+except Exception:
+    # GitPython may not be available in all CI or doc-build environments.
+    # Defer handling of a missing Repo by setting it to None so later
+    # code can handle the absence of repository metadata gracefully.
+    Repo = None
 
 # Configuration file for the Sphinx documentation builder.
 #
@@ -42,7 +48,14 @@ else:
 html_context["current_language"] = current_language
 
 # Make current version accessible for the html templates
-repo = Repo(search_parent_directories=True)
+repo = None
+# Create Repo only if GitPython is available and handle any errors
+if Repo is not None:
+    try:
+        repo = Repo(search_parent_directories=True)
+    except Exception:
+        repo = None
+
 local = False
 if "current_version" in os.environ:
     current_version = os.environ["current_version"]
@@ -50,7 +63,15 @@ elif os.getenv("GITHUB_ACTIONS"):
     current_version = "main"
 else:
     local = True
-    current_version = repo.active_branch.name
+    # Try to read the active branch name, but fall back to a safe default
+    # if the repository is not available or in a detached/CI state.
+    try:
+        if repo is not None and getattr(repo, "active_branch", None) is not None:
+            current_version = repo.active_branch.name
+        else:
+            current_version = "main"
+    except Exception:
+        current_version = "main"
 
 # Format current version for the html templates
 html_context["current_version"] = {}
@@ -63,17 +84,40 @@ html_context["current_version"]["full_name"] = (
 
 # Make version list accessible for the html templates
 html_context["versions"] = list()
-versions = sorted(
-    [
-        tag.name
-        for tag in repo.tags
-        if not tag.name.startswith("intelligence/")
-        and tag.name[0] == "v"
-        and int(tag.name[1]) > 0
-        and int(tag.name.split(".")[1]) >= 8
-    ],
-    key=lambda x: [int(part) for part in x[1:].split(".")],
-)
+versions = []
+# Build a safe list of version tags. Be defensive against tags that do not
+# follow the expected "v<major>.<minor>[.<patch>]" pattern or have
+# non-numeric components.
+if repo is not None:
+    for tag in repo.tags:
+        name = getattr(tag, "name", "")
+        if not isinstance(name, str):
+            continue
+        if name.startswith("intelligence/"):
+            continue
+        if not name.startswith("v"):
+            continue
+        parts = name[1:].split(".")
+        # Expect at least major and minor
+        if len(parts) < 2:
+            continue
+        try:
+            major = int(parts[0])
+            minor = int(parts[1])
+        except (ValueError, TypeError):
+            # Skip tags with non-integer version components
+            continue
+        if major <= 0:
+            continue
+        if minor < 8:
+            continue
+        versions.append(name)
+# Sort the collected versions using numeric components; if parsing fails
+# in the key function, fall back to the string itself.
+try:
+    versions = sorted(versions, key=lambda x: [int(part) for part in x[1:].split(".")])
+except Exception:
+    versions = sorted(versions)
 versions.append("main")
 for version in versions:
     html_context["versions"].append({"name": version})

@@ -154,7 +154,9 @@ class ClientApp:
 
             category, action = message.metadata.message_type, DEFAULT_ACTION
             if "." in category:
-                category, action = category.split(".")
+                # Split at most once to avoid ValueError when message_type contains
+                # more than one dot (e.g. 'train.custom.extra').
+                category, action = category.split(".", 1)
 
             # Check if the function is registered
             if (full_name := f"{category}.{action}") in self._registered_funcs:
@@ -215,7 +217,7 @@ class ClientApp:
                 # Create and return an echo reply message
                 return Message(message.content, reply_to=message)
         """
-        return _get_decorator(self, MessageType.TRAIN, action, mods)
+        return _get_decorator(self, MessageType.TRAIN.value, action, mods)
 
     def evaluate(
         self, action: str = DEFAULT_ACTION, *, mods: Optional[list[Mod]] = None
@@ -270,7 +272,7 @@ class ClientApp:
                 # Create and return an echo reply message
                 return Message(message.content, reply_to=message)
         """
-        return _get_decorator(self, MessageType.EVALUATE, action, mods)
+        return _get_decorator(self, MessageType.EVALUATE.value, action, mods)
 
     def query(
         self, action: str = DEFAULT_ACTION, *, mods: Optional[list[Mod]] = None
@@ -325,7 +327,7 @@ class ClientApp:
                 # Create and return an echo reply message
                 return Message(message.content, reply_to=message)
         """
-        return _get_decorator(self, MessageType.QUERY, action, mods)
+        return _get_decorator(self, MessageType.QUERY.value, action, mods)
 
     def lifespan(
         self,

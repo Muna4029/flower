@@ -15,7 +15,6 @@
 # ==============================================================================
 """Update the changelog using PR titles."""
 
-
 import re
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -31,9 +30,11 @@ from github.PullRequest import PullRequest
 from github.Repository import Repository
 
 try:
-    import tomllib
-except ModuleNotFoundError:
-    import tomli as tomllib
+    import tomllib  # type: ignore
+except Exception:
+    # Don't raise at import time if tomllib/tomli is not available; we'll try to
+    # load the TOML parser lazily when needed.
+    tomllib = None  # type: ignore
 
 
 REPO_NAME = "adap/flower"
@@ -41,22 +42,91 @@ ROOT_DIR = Path(__file__).parents[2]  # Path to the root of the repository
 CHANGELOG_FILE = ROOT_DIR / "framework" / "docs" / "source" / "ref-changelog.md"
 CHANGELOG_SECTION_HEADER = "### Changelog entry"
 
-# Load the TOML configuration
-with (ROOT_DIR / "dev" / "changelog_config.toml").open("rb") as toml_f:
-    CONFIG = tomllib.load(toml_f)
+# Lazy-loaded configuration and git repository to avoid import-time IO/external
+# initialization (helps linters and test collectors that import the module).
+CONFIG = None
+TYPES = None
+PROJECTS = None
+SCOPE = None
+ALLOWED_VERBS = None
+PATTERN_TEMPLATE = None
+PATTERN = None
+LOCAL_REPO = None
 
-# Extract types, project, and scope from the config
-TYPES = "|".join(CONFIG["type"])
-PROJECTS = "|".join(CONFIG["project"]) + "|\\*"
-SCOPE = CONFIG["scope"]
-ALLOWED_VERBS = CONFIG["allowed_verbs"]
 
-# Construct the pattern
-PATTERN_TEMPLATE = CONFIG["pattern_template"]
-PATTERN = PATTERN_TEMPLATE.format(types=TYPES, projects=PROJECTS, scope=SCOPE)
+def _init_config_and_repo() -> None:
+    """Lazily initialize CONFIG, pattern vars and LOCAL_REPO.
 
-# Local git repository
-LOCAL_REPO = git.Repo(search_parent_directories=True)
+    This function is safe to call multiple times and will only perform the
+    initialization once. It avoids performing file or git operations at import
+    time.
+    """
+    global \
+        CONFIG, \
+        TYPES, \
+        PROJECTS, \
+        SCOPE, \
+        ALLOWED_VERBS, \
+        PATTERN_TEMPLATE, \
+        PATTERN, \
+        LOCAL_REPO
+
+    if CONFIG is not None and PATTERN is not None and LOCAL_REPO is not None:
+        return
+
+    # Load TOML parser lazily (prefer stdlib tomllib, fall back to tomli)
+    toml_loader = None
+    try:
+        import tomllib as _toml_loader  # type: ignore
+
+        toml_loader = _toml_loader
+    except Exception:
+        try:
+            import tomli as _toml_loader  # type: ignore
+
+            toml_loader = _toml_loader
+        except Exception:
+            toml_loader = None
+
+    config_path = ROOT_DIR / "dev" / "changelog_config.toml"
+    if toml_loader is not None and config_path.exists():
+        try:
+            with config_path.open("rb") as toml_f:
+                CONFIG = toml_loader.load(toml_f)
+        except Exception:
+            CONFIG = None
+    else:
+        CONFIG = None
+
+    # Provide sane defaults if the configuration couldn't be loaded
+    if not CONFIG:
+        CONFIG = {
+            "type": ["unknown"],
+            "project": ["*"],
+            "scope": "",
+            "allowed_verbs": [],
+            "pattern_template": r"(?P<type>.+?):(?P<project>.+?):(?P<scope>.*?): (?P<subject>.+)",
+        }
+
+    TYPES = "|".join(CONFIG.get("type", ["unknown"]))
+    PROJECTS = "|".join(CONFIG.get("project", ["*"])) + "|\\*"
+    SCOPE = CONFIG.get("scope", "")
+    ALLOWED_VERBS = CONFIG.get("allowed_verbs", [])
+    PATTERN_TEMPLATE = CONFIG.get(
+        "pattern_template",
+        r"(?P<type>.+?):(?P<project>.+?):(?P<scope>.*?): (?P<subject>.+)",
+    )
+    try:
+        PATTERN = PATTERN_TEMPLATE.format(types=TYPES, projects=PROJECTS, scope=SCOPE)
+    except Exception:
+        PATTERN = PATTERN_TEMPLATE
+
+    # Initialize LOCAL_REPO lazily; don't raise on failure here.
+    try:
+        LOCAL_REPO = git.Repo(search_parent_directories=True)
+    except Exception:
+        LOCAL_REPO = None
+
 
 # Map PR types to sections in the changelog
 PR_TYPE_TO_SECTION = {
@@ -70,7 +140,10 @@ PR_TYPE_TO_SECTION = {
 }
 
 # Maximum number of workers in the thread pool
-MAX_WORKERS = argv[2] if len(argv) > 2 else 10
+try:
+    MAX_WORKERS = int(argv[2]) if len(argv) > 2 else 10
+except (ValueError, TypeError):
+    MAX_WORKERS = 10
 
 
 def _get_latest_tag(gh_api: Github) -> tuple[Repository, str]:
@@ -272,7 +345,7 @@ def _update_changelog(prs: set[PullRequest], tag: str, new_tag: str) -> bool:
             # Skip if the PR is already in changelog
             if f"#{pr_info.number}]" in content:
                 continue
-            
+
             # Skip Flower Intelligence PRs
             if parsed_title["project"] == "intelligence":
                 continue
@@ -353,6 +426,9 @@ def main() -> None:
     """Update changelog using the descriptions of PRs since the latest tag."""
     start = time.time()
 
+    # Lazily initialize configuration and repository objects to avoid import-time IO
+    _init_config_and_repo()
+
     # Initialize GitHub Client with provided token (as argument)
     gh_api = Github(argv[1])
 
@@ -374,7 +450,6 @@ def main() -> None:
     print("Updating the changelog...")
     new_version = _bump_minor_version(latest_tag)
     if _update_changelog(prs, latest_tag, new_version):
-
         if not new_version:
             print("Wrong tag format.")
             return
