@@ -70,7 +70,7 @@ def get_dataset():
 
 def load_data(
     partition_id: int, num_partitions: int, model_name: str, device=None
-) -> tuple[DataLoader[Any], DataLoader[Any]]:
+) -> DataLoader[Any]:
     """Load pusht data (training and eval)"""
     # Only initialize `FederatedDataset` once
     global fds
