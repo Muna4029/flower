@@ -20,7 +20,6 @@ Workflow Details:
 
 import argparse
 import json
-import sys
 from dataclasses import asdict, dataclass, field
 from enum import Enum
 from typing import Any, Callable, Dict, List, Optional
@@ -29,7 +28,7 @@ from typing import Any, Callable, Dict, List, Optional
 # class DistroName(StrEnum):
 #     ALPINE = "alpine"
 #     UBUNTU = "ubuntu"
-assert sys.version_info < (3, 11), "Script requires Python 3.9 or lower."
+# Allow running on Python 3.9 and newer; do not restrict to <3.11.
 
 
 class DistroName(str, Enum):
