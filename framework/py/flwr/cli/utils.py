@@ -123,14 +123,14 @@ def sanitize_project_name(name: str) -> str:
 
     This version replaces spaces, dots, slashes, and underscores with dashes, removes
     any characters not allowed in Python project names, makes the string lowercase, and
-    ensures it starts with a valid character.
+    ensures it starts with a valid letter character.
     """
-    # Replace whitespace with '_'
+    # Replace whitespace with '-'
     name_with_hyphens = re.sub(r"[ ./_]", "-", name)
 
-    # Allowed characters in a module name: letters, digits, underscore
+    # Allowed characters in a module name: letters, digits, and hyphen
     allowed_chars = set(
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"
+        "abcdefghijklmnopqrstuvwxyz0123456789-"
     )
 
     # Make the string lowercase
@@ -139,10 +139,8 @@ def sanitize_project_name(name: str) -> str:
     # Remove any characters not allowed in Python module names
     sanitized_name = "".join(c for c in sanitized_name if c in allowed_chars)
 
-    # Ensure the first character is a letter or underscore
-    while sanitized_name and (
-        sanitized_name[0].isdigit() or sanitized_name[0] not in allowed_chars
-    ):
+    # Ensure the first character is a letter
+    while sanitized_name and not sanitized_name[0].isalpha():
         sanitized_name = sanitized_name[1:]
 
     return sanitized_name
